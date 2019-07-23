@@ -7,3 +7,8 @@ from __future__ import print_function
 from pathlib import Path
 from typing import Callable, Dict, Optional
 
+class Lenet:
+
+    def __init__():
+
+    def build():

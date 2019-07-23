@@ -16,7 +16,7 @@ import  errno
 import json
 from pathlib import Path
 import sys
-sys.path.append(str(Path().absolute().parents[1]))
+sys.path.append(str(Path(__file__).resolve().parents[2]))
 from src.data.dataset import Dataset
 from src import util
 
@@ -25,7 +25,7 @@ raw_folder = root_folder/'raw'
 processed_folder = root_folder/'processed'
 url = 'https://s3-us-west-2.amazonaws.com/fsdl-public-assets/matlab.zip'
 filename = raw_folder/'matlab.zip'
-essentials_filename = raw_folder/'emnist_essentials.json'
+ESSENTIALS_FILENAME = raw_folder/'emnist_essentials.json'
 
 class EMNIST(Dataset):
     """
@@ -37,6 +37,11 @@ class EMNIST(Dataset):
     """
     def __init__(self):
         self.input_shape = (28, 28)
+        if os.path.exists(ESSENTIALS_FILENAME):
+            with open(ESSENTIALS_FILENAME) as f:
+                essentials = json.load(f)
+            self.mapping = dict(essentials['mapping'])
+            self.num_classes = len(self.mapping)
 
     def download(self):
         """Download EMNIST dataset"""
@@ -82,7 +87,7 @@ class EMNIST(Dataset):
         self.mapping = mapping    
         self.num_classes = len(self.mapping)
 
-        with open(essentials_filename, 'w') as f:
+        with open(ESSENTIALS_FILENAME, 'w') as f:
             json.dump(essentials, f)
 
         print('[INFO] Cleaning up...')
