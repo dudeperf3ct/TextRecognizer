@@ -36,12 +36,19 @@ class EMNIST(Dataset):
     EMNIST ByClass: 814,255 characters. 62 unbalanced classes.
     """
     def __init__(self):
-        self.input_shape = (28, 28)
+        
         if os.path.exists(ESSENTIALS_FILENAME):
             with open(ESSENTIALS_FILENAME) as f:
                 essentials = json.load(f)
             self.mapping = dict(essentials['mapping'])
             self.num_classes = len(self.mapping)
+            self.input_shape = essentials['input_shape']
+            self.output_shape = (self.num_classes,)
+        
+        self.x_train = None
+        self.y_train = None
+        self.x_test = None
+        self.y_test = None
 
     def download(self):
         """Download EMNIST dataset"""
@@ -86,6 +93,8 @@ class EMNIST(Dataset):
         essentials = {'mapping': list(mapping.items()), 'input_shape': list(x_train.shape[1:])}
         self.mapping = mapping    
         self.num_classes = len(self.mapping)
+        self.input_shape = essentials['input_shape']
+        self.output_shape = (self.num_classes,)
 
         with open(ESSENTIALS_FILENAME, 'w') as f:
             json.dump(essentials, f)
@@ -103,10 +112,10 @@ class EMNIST(Dataset):
         if not os.path.exists(PROCESSED_DATA_FILENAME):
             self.download()
         with h5py.File(PROCESSED_DATA_FILENAME, 'r') as f:
-            x_train = f['x_train'][:]
-            y_train = f['y_train'][:]
-            x_test = f['x_test'][:]
-            y_test = f['y_test'][:]
+            self.x_train = f['x_train'][:]
+            self.y_train = f['y_train'][:]
+            self.x_test = f['x_test'][:]
+            self.y_test = f['y_test'][:]
 
         return (x_train, y_train), (x_test, y_test)
 

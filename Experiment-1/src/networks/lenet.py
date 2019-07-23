@@ -9,17 +9,16 @@ import tensorflow as tf
 from tensorflow.keras.layers import Conv2D, Dense, Dropout, Flatten, Lambda, MaxPooling2D
 from tensorflow.keras.models import Sequential, Model
 
-def lenet(input_shape : Tuple[int, ...], output_shape : Tuple[int, ...]) -> Model:
+def lenet(input_shape : Tuple[int, ...], num_classes : int) -> Model:
     """Creates a lenet model 
     INPUT => CONV => RELU => CONV => RELU => POOL => DROPOUT => Flatten => FC => RELU => DROPOUT => FC
     Args:
     input_shape : shape of the input tensor
-    output_classes : shape of the output tensor (num_classes, 1)
+    num_classes : number of classes
 
     Returns:
     Lenet Model
     """
-    num_classes = output_shape.shape[0]
     model = Sequential()
     if len(input_shape) < 3:
         model.add(Lambda(lambda x: tf.expand_dims(x, -1), input_shape=input_shape))
