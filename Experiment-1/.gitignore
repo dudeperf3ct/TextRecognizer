@@ -91,4 +91,3 @@ target/
 
 # Keep .gitkeep files  
 !/**/.gitkeep
-!/**/**/.gitkeep
