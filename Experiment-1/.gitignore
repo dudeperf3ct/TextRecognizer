@@ -68,6 +68,7 @@ target/
 
 # VS Code
 .vscode/
+../.vscode/
 
 # Spyder
 .spyproject/
@@ -90,4 +91,4 @@ target/
 
 # Keep .gitkeep files  
 !/**/.gitkeep
-!/*/*/.gitkeep
+!/**/**/.gitkeep
