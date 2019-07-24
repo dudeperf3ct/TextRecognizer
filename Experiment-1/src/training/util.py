@@ -5,10 +5,11 @@ from __future__ import division
 from __future__ import print_function
 
 import time
+import tensorflow
 from tensorflow.keras.callbacks import EarlyStopping
 from src.data.dataset import Dataset
 from src.models.base_model import Model
-from src.visualization.visualize import plot_history
+#from src.visualization.visualize import plot_history
 
 EARLY_STOPPING = True
 
@@ -31,6 +32,6 @@ def train_model(
     _history = model.fit(dataset=dataset, batch_size=batch_size, epochs=epochs, callbacks=callbacks)
     print('[INFO] Training took {:2f} s'.format(time.time() - t))
 
-    plot_history(_history)
+    #plot_history(_history)
 
     return model
