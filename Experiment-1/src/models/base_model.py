@@ -79,16 +79,17 @@ class Model:
         trn_generator = self.train_generator(dataset, shuff_index, batch_size=batch_size)
         val_generator = self.valid_generator(dataset, batch_size=batch_size)
         #train using fit_generator
-        self.network.fit_generator(
-            generator=trn_generator,
-            steps_per_epoch=int(dataset['x_train'].shape[0]),
-            epochs=epochs,
-            callbacks=callbacks,
-            validation_data=val_generator,
-            validation_steps=int(dataset['x_valid'].shape[0]),
-            use_multiprocessing=False,
-            shuffle=True
-        )
+        history = self.network.fit_generator(
+                    generator=trn_generator,
+                    steps_per_epoch=int(dataset['x_train'].shape[0]),
+                    epochs=epochs,
+                    callbacks=callbacks,
+                    validation_data=val_generator,
+                    validation_steps=int(dataset['x_valid'].shape[0]),
+                    use_multiprocessing=False,
+                    shuffle=True
+                )
+        return history
 
     # def test_generator(self, dataset, batch_size):
     #     num_iters = int(np.ceil(dataset['x_test'].shape[0] / batch_size))

@@ -52,19 +52,19 @@ def train(args, use_comet : bool = True):
     data = data_cls()
     (x_train, y_train), (x_test, y_test) = data.load_data()
     
-    #Used for testing only
-    x_train = x_train[:100, :, :]
-    y_train = y_train[:100, :]
-    x_test = x_test[:100, :, :]
-    y_test = y_test[:100, :]
-    print ('[INFO] Training shape: ', x_train.shape, y_train.shape)
-    print ('[INFO] Test shape: ', x_test.shape, y_test.shape)
-    #delete these lines
+    # #Used for testing only
+    # x_train = x_train[:100, :, :]
+    # y_train = y_train[:100, :]
+    # x_test = x_test[:100, :, :]
+    # y_test = y_test[:100, :]
+    # print ('[INFO] Training shape: ', x_train.shape, y_train.shape)
+    # print ('[INFO] Test shape: ', x_test.shape, y_test.shape)
+    # #delete these lines
 
     # add this stratify=y_train after verifying distribution of classes 
     (x_train, x_valid, y_train, y_valid) = train_test_split(x_train, y_train, test_size=0.2,
                                                  random_state=42)
-
+                                                 
     print ('[INFO] Training shape: ', x_train.shape, y_train.shape)
     print ('[INFO] Validation shape: ', x_valid.shape, y_valid.shape)
     print ('[INFO] Test shape: ', x_test.shape, y_test.shape)
@@ -87,33 +87,48 @@ def train(args, use_comet : bool = True):
         experiment = Experiment(api_key='WVBNRAfMLCBWslJAAsffxM4Gz',
                                 project_name='emnist',
                                 auto_param_logging=False)
+        
+        print ('[INFO] Starting Training...')
+        #will log metrics with the prefix 'train_'   
+        with experiment.train():
+            train_model(
+                Model,
+                dataset,
+                batch_size=args['batch_size'],
+                epochs=args['epochs']
+                )
 
-    print ('[INFO] Starting Training...')
-    #will log metrics with the prefix 'train_'   
-    with experiment.train():
+        print ('[INFO] Starting Testing...')    
+        #will log metrics with the prefix 'test_'
+        with experiment.test():  
+            loss, score = Model.evaluate(dataset)
+            print(f'[INFO] Test evaluation: {score}')
+            metrics = {
+                'loss':loss,
+                'accuracy':score
+            }
+            experiment.log_metrics(metrics)    
+
+        experiment.log_parameters(args)
+        experiment.log_dataset_hash(x_train) #creates and logs a hash of your data 
+
+    else :
+
+        print ('[INFO] Starting Training...')
         train_model(
             Model,
             dataset,
             batch_size=args['batch_size'],
             epochs=args['epochs']
             )
-
-    print ('[INFO] Starting Testing...')    
-    #will log metrics with the prefix 'test_'
-    with experiment.test():  
+        print ('[INFO] Starting Testing...')    
         loss, score = Model.evaluate(dataset)
         print(f'[INFO] Test evaluation: {score}')
-        metrics = {
-            'loss':loss,
-            'accuracy':score
-        }
-        experiment.log_metrics(metrics)    
 
     if args['weights']:
         Model.save_weights()
 
-    experiment.log_parameters(args)
-    experiment.log_dataset_hash(x_train) #creates and logs a hash of your data  
+ 
     
 
 def main():
