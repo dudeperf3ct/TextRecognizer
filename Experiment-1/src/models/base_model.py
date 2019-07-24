@@ -81,16 +81,17 @@ class Model:
         iters_test = int(np.ceil(dataset['x_valid'].shape[0] / float(batch_size)))
         print ('Number:', iters_train, iters_test)
         #train the model using fit_generator
-        self.network.fit_generator(
-            generator=trn_generator,
-            steps_per_epoch=iters_train,
-            epochs=epochs,
-            callbacks=callbacks,
-            validation_data=val_generator,
-            validation_steps=iters_test,
-            use_multiprocessing=True,
-            shuffle=True
-        )
+        history = self.network.fit_generator(
+                    generator=trn_generator,
+                    steps_per_epoch=iters_train,
+                    epochs=epochs,
+                    callbacks=callbacks,
+                    validation_data=val_generator,
+                    validation_steps=iters_test,
+                    use_multiprocessing=True,
+                    shuffle=True
+                )
+        return history
 
     # def test_generator(self, dataset, batch_size):
     #     num_iters = int(np.ceil(dataset['x_test'].shape[0] / batch_size))

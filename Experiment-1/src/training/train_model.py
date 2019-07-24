@@ -91,12 +91,12 @@ def train(args, use_comet : bool = True):
         print ('[INFO] Starting Training...')
         #will log metrics with the prefix 'train_'   
         with experiment.train():
-            train_model(
-                Model,
-                dataset,
-                batch_size=args['batch_size'],
-                epochs=args['epochs']
-                )
+            _ = train_model(
+                    Model,
+                    dataset,
+                    batch_size=args['batch_size'],
+                    epochs=args['epochs']
+                    )
 
         print ('[INFO] Starting Testing...')    
         #will log metrics with the prefix 'test_'
@@ -128,8 +128,6 @@ def train(args, use_comet : bool = True):
     if args['weights']:
         Model.save_weights()
 
- 
-    
 
 def main():
     """Run experiment."""
