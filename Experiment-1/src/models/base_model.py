@@ -29,7 +29,6 @@ class Model:
         self.name = f'{self.__class__.__name__}_{dataset.__name__}_{network_fn.__name__}'
         self.data = dataset()
         self.network = network_fn(self.data.input_shape, self.data.output_shape)
-        self.network.summary()
 
         self.batch_augment_fn: Optional[Callable] = None
         self.batch_format_fn: Optional[Callable] = None
@@ -78,12 +77,10 @@ class Model:
         trn_generator = self.train_generator(dataset, shuff_index, batch_size=batch_size)
         val_generator = self.valid_generator(dataset, batch_size=batch_size)
         
-        iters_train = dataset['x_train'].shape[0]
-        iters_train -= iters_train / batch_size
-        iters_test = dataset['x_valid'].shape[0]
-        iters_test -= iters_test / batch_size
+        iters_train = int(np.ceil(dataset['x_train'].shape[0] / float(self.batch_size)))
+        iters_test = int(np.ceil(dataset['x_valid'].shape[0] / float(self.batch_size)))
         print ('Number:', iters_train, iters_test)
-        #train using fit_generator
+        #train the model using fit_generator
         history = self.network.fit_generator(
                     generator=trn_generator,
                     steps_per_epoch=iters_train,
