@@ -61,7 +61,8 @@ def train(args, use_comet : bool = True):
 
     if use_comet:
         #create an experiment with your api key
-        experiment = Experiment(project_name='emnist',
+        experiment = Experiment(api_key='WVBNRAfMLCBWslJAAsffxM4Gz',
+                                project_name='emnist',
                                 auto_param_logging=False)
 
     #will log metrics with the prefix 'train_'   
