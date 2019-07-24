@@ -86,7 +86,7 @@ class Model:
                     callbacks=callbacks,
                     validation_data=val_generator,
                     validation_steps=int(dataset['x_valid'].shape[0]),
-                    use_multiprocessing=False,
+                    use_multiprocessing=True,
                     shuffle=True
                 )
         return history
