@@ -9,7 +9,7 @@ import tensorflow as tf
 from tensorflow.keras.layers import Conv2D, Dense, Dropout, Flatten, Lambda, MaxPooling2D
 from tensorflow.keras.models import Sequential, Model
 
-def lenet(input_shape : Tuple[int, ...], num_classes : int) -> Model:
+def lenet(input_shape : Tuple[int, ...], output_shape : Tuple[int, ...]) -> Model:
     """Creates a lenet model 
     INPUT => CONV => RELU => CONV => RELU => POOL => DROPOUT => Flatten => FC => RELU => DROPOUT => FC
     Args:
@@ -19,6 +19,7 @@ def lenet(input_shape : Tuple[int, ...], num_classes : int) -> Model:
     Returns:
     Lenet Model
     """
+    num_classes = output_shape[0]
     model = Sequential()
     if len(input_shape) < 3:
         model.add(Lambda(lambda x: tf.expand_dims(x, -1), input_shape=input_shape))
@@ -33,11 +34,11 @@ def lenet(input_shape : Tuple[int, ...], num_classes : int) -> Model:
     model.add(Dropout(0.2))
     #Input (12, 12, 64) -> Output (12*12*64,)    
     model.add(Flatten())
-    #Input (12*12*64,)  -> Output (128, )
+    #Input (12*12*64,)  -> Output (128,)
     model.add(Dense(128, activation='relu'))
-    #Input (128,)       -> Output (128, )
+    #Input (128,)       -> Output (128,)
     model.add(Dropout(0.2))
-    #Input (128,)       -> Output (num_classes)
+    #Input (128,)       -> Output (num_classes,)
     model.add(Dense(num_classes, activation='softmax'))
 
     return model

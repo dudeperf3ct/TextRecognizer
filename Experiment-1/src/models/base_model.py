@@ -5,11 +5,14 @@ Base Model class
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
+import os
+import errno
 import numpy as np
 np.random.seed(42)
 
 from pathlib import Path
-from typing import Callable, Dict, Optional
+from typing import Callable, Dict, Optional, Tuple
+from tensorflow.keras.optimizers import RMSprop
 from src.data.emnist_dataset import EMNIST
 from src.networks.lenet import lenet
 
@@ -39,10 +42,16 @@ class Model:
     def weights_filename(self) -> str:
         try:
             os.makedirs(WEIGHTS_DIR)
+        except OSError as e:
+            if e.errno == errno.EEXIST:
+                pass
+            else:
+                raise
         return str(WEIGHTS_DIR/f'{self.name}_weights.h5')
     
     def train_generator(self, dataset, shuff_index, batch_size):
-        num_iters = train_x.shape[0] / batch_size
+        num_iters = int(np.ceil(dataset['x_train'].shape[0] / batch_size))
+        print ('Number of iterations', num_iters)
         while 1:
             for i in range(num_iters):
                 idx = shuff_index[i*batch_size:(i+1)*batch_size]
@@ -52,7 +61,7 @@ class Model:
                 yield tmp, dataset['y_train'][idx]
     
     def valid_generator(self, dataset, batch_size):
-        num_iters = dataset['x_valid'].shape[0] / batch_size
+        num_iters = int(np.ceil(dataset['x_valid'].shape[0] / batch_size))
         while 1:
             for i in range(num_iters):
                 tmp = dataset['x_valid'][i*batch_size:(i+1)*batch_size].astype('float32')
@@ -67,33 +76,33 @@ class Model:
         self.network.compile(loss=self.loss(), optimizer=self.optimizer(), metrics=self.metrics())
         #get the batches from generator
         shuff_index = np.random.permutation(dataset['x_train'].shape[0])
-        trn_generator = train_generator(dataset, shuff_index, batch_size=batch_size)
-        val_generator = valid_generator(dataset, batch_size=batch_size)
+        trn_generator = self.train_generator(dataset, shuff_index, batch_size=batch_size)
+        val_generator = self.valid_generator(dataset, batch_size=batch_size)
         #train using fit_generator
         self.network.fit_generator(
             generator=trn_generator,
-            steps_per_epoch=int(np.ceil(len(trn_generator)/batch_size)),
+            steps_per_epoch=int(dataset['x_train'].shape[0]),
             epochs=epochs,
             callbacks=callbacks,
             validation_data=val_generator,
-            validation_step=int(np.ceil(len(val_generator)/batch_size)),
+            validation_steps=int(dataset['x_valid'].shape[0]),
             use_multiprocessing=False,
             shuffle=True
         )
 
-    def test_generator(self, dataset, batch_size):
-        num_iters = dataset['x_test'].shape[0] / batch_size
-        while 1:
-            for i in range(num_iters):
-                tmp = dataset['x_test'][i*batch_size:(i+1)*batch_size].astype('float32')
-                tmp -= np.mean(dataset['x_train'], axis=0, keepdims=True)
-                tmp /= 255.0
-                yield tmp, dataset['y_test'][i*batch_size:(i+1)*batch_size]
+    # def test_generator(self, dataset, batch_size):
+    #     num_iters = int(np.ceil(dataset['x_test'].shape[0] / batch_size))
+    #     while 1:
+    #         for i in range(num_iters):
+    #             tmp = dataset['x_test'][i*batch_size:(i+1)*batch_size].astype('float32')
+    #             tmp -= np.mean(dataset['x_train'], axis=0, keepdims=True)
+    #             tmp /= 255.0
+    #             yield tmp, dataset['y_test'][i*batch_size:(i+1)*batch_size]
 
     def evaluate(self, dataset, batch_size=16, verbose=False):
-        test_x, test_y = test_generator(dataset, batch_size=batch_size)  # Use a small batch size to use less memory
-        preds = self.network.predict_generator(test_x)
-        return np.mean(np.argmax(preds, -1) == np.argmax(test_y, -1))
+        #t_generator = self.test_generator(dataset, batch_size=batch_size)  # Use a small batch size to use less memory
+        loss, accuracy = self.network.evaluate(dataset['x_test'], dataset['y_test'], batch_size=batch_size)
+        return loss, accuracy
 
     def loss(self):
         return 'categorical_crossentropy'

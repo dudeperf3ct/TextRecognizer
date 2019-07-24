@@ -15,6 +15,7 @@ import h5py
 import  errno
 import json
 from pathlib import Path
+from tensorflow.keras.utils import to_categorical
 import sys
 sys.path.append(str(Path(__file__).resolve().parents[2]))
 from src.data.dataset import Dataset
@@ -116,8 +117,11 @@ class EMNIST(Dataset):
             self.y_train = f['y_train'][:]
             self.x_test = f['x_test'][:]
             self.y_test = f['y_test'][:]
-
-        return (x_train, y_train), (x_test, y_test)
+        
+        self.y_train = to_categorical(self.y_train, num_classes=self.num_classes)
+        self.y_test = to_categorical(self.y_test, num_classes=self.num_classes)
+        
+        return (self.x_train, self.y_train), (self.x_test, self.y_test)
 
     def __repr__(self):
         return (

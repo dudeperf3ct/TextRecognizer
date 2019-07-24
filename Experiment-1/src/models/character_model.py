@@ -6,8 +6,10 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import numpy as np
 from pathlib import Path
-from typing import Callable, Dict, Optional
+from typing import Callable, Dict, Optional, Tuple
+from src.models.base_model import Model
 from src.data.emnist_dataset import EMNIST
 from src.networks.lenet import lenet
 
@@ -19,7 +21,7 @@ class Character_Model(Model):
                  network_fn : Callable = lenet,
                  dataset : type = EMNIST):
         """Define default network class and dataset class"""
-        super.__init__(network_fn, dataset)
+        super().__init__(network_fn, dataset)
     
     def predict_on_image(self, image: np.ndarray) -> Tuple[str, float]:
         if image.dtype == np.uint8:

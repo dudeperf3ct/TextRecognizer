@@ -6,8 +6,8 @@ from __future__ import print_function
 
 import time
 from tensorflow.keras.callbacks import EarlyStopping
-from src.datasets.dataset import Dataset
-from src.models.base import Model
+from src.data.dataset import Dataset
+from src.models.base_model import Model
 #from src.visualization.visualize import plot_history
 
 EARLY_STOPPING = True
@@ -27,9 +27,9 @@ def train_model(
 
     model.network.summary()
 
-    t = time()
+    t = time.time()
     _history = model.fit(dataset=dataset, batch_size=batch_size, epochs=epochs, callbacks=callbacks)
-    print('[INFO] Training took {:2f} s'.format(time() - t))
+    print('[INFO] Training took {:2f} s'.format(time.time() - t))
 
     #plot_history(_history)
 
