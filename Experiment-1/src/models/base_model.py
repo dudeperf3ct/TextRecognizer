@@ -82,6 +82,7 @@ class Model:
         iters_train -= iters_train % batch_size
         iters_test = dataset['x_valid'].shape[0]
         iters_test -= iters_test % batch_size
+        pritn ('Number:', iters_train, iters_test)
         #train using fit_generator
         history = self.network.fit_generator(
                     generator=trn_generator,
