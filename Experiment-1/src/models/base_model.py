@@ -46,19 +46,19 @@ class Model:
         while 1:
             for i in range(num_iters):
                 idx = shuff_index[i*batch_size:(i+1)*batch_size]
-                tmp = dataset.x_train[idx].astype('float32')
-                tmp -= dataset.x_train_mean
+                tmp = dataset['x_train'][idx].astype('float32')
+                tmp -= np.mean(dataset['x_train'], axis=0, keepdims=True)
                 tmp /= 255.0
-                yield tmp, dataset.y_train[idx]
+                yield tmp, dataset['y_train'][idx]
     
     def valid_generator(self, dataset, batch_size):
-        num_iters = dataset.x_test.shape[0] / batch_size
+        num_iters = dataset['x_valid'].shape[0] / batch_size
         while 1:
             for i in range(num_iters):
-                tmp = dataset.x_test[i*batch_size:(i+1)*batch_size].astype('float32')
-                tmp -= np.mean(dataset.x_train, axis=0, keepdims=True)
+                tmp = dataset['x_valid'][i*batch_size:(i+1)*batch_size].astype('float32')
+                tmp -= np.mean(dataset['x_train'], axis=0, keepdims=True)
                 tmp /= 255.0
-                yield tmp, dataset.y_test[i*batch_size:(i+1)*batch_size]
+                yield tmp, dataset['y_valid'][i*batch_size:(i+1)*batch_size]
 
     def fit(self, dataset, batch_size : int = 32, epochs : int = 10, callbacks : list = None):
         if callbacks is None:
@@ -66,7 +66,7 @@ class Model:
         #compile the network
         self.network.compile(loss=self.loss(), optimizer=self.optimizer(), metrics=self.metrics())
         #get the batches from generator
-        shuff_index = np.random.permutation(dataset.x_train.shape[0])
+        shuff_index = np.random.permutation(dataset['x_train'].shape[0])
         trn_generator = train_generator(dataset, shuff_index, batch_size=batch_size)
         val_generator = valid_generator(dataset, batch_size=batch_size)
         #train using fit_generator
@@ -81,10 +81,19 @@ class Model:
             shuffle=True
         )
 
+    def test_generator(self, dataset, batch_size):
+        num_iters = dataset['x_test'].shape[0] / batch_size
+        while 1:
+            for i in range(num_iters):
+                tmp = dataset['x_test'][i*batch_size:(i+1)*batch_size].astype('float32')
+                tmp -= np.mean(dataset['x_train'], axis=0, keepdims=True)
+                tmp /= 255.0
+                yield tmp, dataset['y_test'][i*batch_size:(i+1)*batch_size]
+
     def evaluate(self, dataset, batch_size=16, verbose=False):
-        val_x, val_y = valid_generator(dataset, batch_size=batch_size)  # Use a small batch size to use less memory
-        preds = self.network.predict_generator(val_x)
-        return np.mean(np.argmax(preds, -1) == np.argmax(val_y, -1))
+        test_x, test_y = test_generator(dataset, batch_size=batch_size)  # Use a small batch size to use less memory
+        preds = self.network.predict_generator(test_x)
+        return np.mean(np.argmax(preds, -1) == np.argmax(test_y, -1))
 
     def loss(self):
         return 'categorical_crossentropy'
@@ -100,3 +109,4 @@ class Model:
 
     def save_weights(self):
         self.network.save_weights(self.weights_filename)
+        print ('[INFO] Weights saved at', self.weights_filename)
