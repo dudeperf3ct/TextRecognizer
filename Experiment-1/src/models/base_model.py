@@ -77,8 +77,8 @@ class Model:
         trn_generator = self.train_generator(dataset, shuff_index, batch_size=batch_size)
         val_generator = self.valid_generator(dataset, batch_size=batch_size)
         
-        iters_train = int(np.ceil(dataset['x_train'].shape[0] / float(self.batch_size)))
-        iters_test = int(np.ceil(dataset['x_valid'].shape[0] / float(self.batch_size)))
+        iters_train = int(np.ceil(dataset['x_train'].shape[0] / float(batch_size)))
+        iters_test = int(np.ceil(dataset['x_valid'].shape[0] / float(batch_size)))
         print ('Number:', iters_train, iters_test)
         #train the model using fit_generator
         history = self.network.fit_generator(
