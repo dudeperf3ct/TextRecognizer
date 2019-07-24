@@ -51,7 +51,6 @@ class Model:
     
     def train_generator(self, dataset, shuff_index, batch_size):
         num_iters = int(np.ceil(dataset['x_train'].shape[0] / batch_size))
-        print ('Number of iterations', num_iters)
         while 1:
             for i in range(num_iters):
                 idx = shuff_index[i*batch_size:(i+1)*batch_size]
@@ -78,14 +77,19 @@ class Model:
         shuff_index = np.random.permutation(dataset['x_train'].shape[0])
         trn_generator = self.train_generator(dataset, shuff_index, batch_size=batch_size)
         val_generator = self.valid_generator(dataset, batch_size=batch_size)
+        
+        iters_train = dataset['x_train'].shape[0]
+        iters_train -= iters_train % batch_size
+        iters_test = dataset['x_valid'].shape[0]
+        iters_test -= iters_test % batch_size
         #train using fit_generator
         history = self.network.fit_generator(
                     generator=trn_generator,
-                    steps_per_epoch=int(dataset['x_train'].shape[0]),
+                    steps_per_epoch=iters_train,
                     epochs=epochs,
                     callbacks=callbacks,
                     validation_data=val_generator,
-                    validation_steps=int(dataset['x_valid'].shape[0]),
+                    validation_steps=iters_test,
                     use_multiprocessing=True,
                     shuffle=True
                 )
