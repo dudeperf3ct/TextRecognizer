@@ -79,9 +79,9 @@ class Model:
         val_generator = self.valid_generator(dataset, batch_size=batch_size)
         
         iters_train = dataset['x_train'].shape[0]
-        iters_train -= iters_train % batch_size
+        iters_train -= iters_train / batch_size
         iters_test = dataset['x_valid'].shape[0]
-        iters_test -= iters_test % batch_size
+        iters_test -= iters_test / batch_size
         print ('Number:', iters_train, iters_test)
         #train using fit_generator
         history = self.network.fit_generator(
