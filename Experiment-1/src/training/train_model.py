@@ -45,7 +45,7 @@ funcs = {'EMNIST': EMNIST, 'lenet': lenet, 'Character_Model': Character_Model}
 def train(args, use_comet : bool = True):
 
     data_cls = funcs[args['dataset']]
-    model = funcs[args['model']]
+    model_cls = funcs[args['model']]
     network = funcs[args['network']]
 
     print ('[INFO] Getting dataset...')
@@ -70,8 +70,8 @@ def train(args, use_comet : bool = True):
     print ('[INFO] Test shape: ', x_test.shape, y_test.shape)
 
     print ('[INFO] Setting up the model..')
-    Model = model(network, data_cls)
-    print (Model)
+    model = model_cls(network, data_cls)
+    print (model)
     
     dataset = dict({
         'x_train' : x_train,
@@ -92,7 +92,7 @@ def train(args, use_comet : bool = True):
         #will log metrics with the prefix 'train_'   
         with experiment.train():
             _ = train_model(
-                    Model,
+                    model,
                     dataset,
                     batch_size=args['batch_size'],
                     epochs=args['epochs']
@@ -101,7 +101,7 @@ def train(args, use_comet : bool = True):
         print ('[INFO] Starting Testing...')    
         #will log metrics with the prefix 'test_'
         with experiment.test():  
-            loss, score = Model.evaluate(dataset, args['batch_size'])
+            loss, score = model.evaluate(dataset, args['batch_size'])
             print(f'[INFO] Test evaluation: {score}')
             metrics = {
                 'loss':loss,
@@ -116,17 +116,17 @@ def train(args, use_comet : bool = True):
 
         print ('[INFO] Starting Training...')
         train_model(
-            Model,
+            model,
             dataset,
             batch_size=args['batch_size'],
             epochs=args['epochs']
             )
         print ('[INFO] Starting Testing...')    
-        loss, score = Model.evaluate(dataset, args['batch_size'])
+        loss, score = model.evaluate(dataset, args['batch_size'])
         print(f'[INFO] Test evaluation: {score}')
 
     if args['weights']:
-        Model.save_weights()
+        model.save_weights()
 
 
 def main():
