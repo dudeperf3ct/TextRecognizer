@@ -79,7 +79,7 @@ def resnet_block(x,
     return x
 
 
-# def resnet(input_shape : Tuple[int, ...], output_shape : Tuple[int, ...]) -> Model:
+def resnet(input_shape : Tuple[int, ...], output_shape : Tuple[int, ...]) -> Model:
 #     """Creates a resnet model 
 #     Stage-1
 #     INPUT => CONV => BN => RELU
