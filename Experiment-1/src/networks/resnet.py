@@ -102,14 +102,11 @@ def resnet(input_shape : Tuple[int, ...], output_shape : Tuple[int, ...]) -> Mod
 #     """
     num_classes = output_shape[0]
 
+    X_input = Input(input_shape)
     if len(input_shape) < 3:
-        model.add(Lambda(lambda x: tf.expand_dims(x, -1), input_shape=input_shape))
-        input_shape = (input_shape[0], input_shape[1], 1)
-    
-    # Define the input as a tensor with shape input_shape
-    X_input = Input((28, 28 , 1))
+        X = Lambda(lambda x: tf.expand_dims(x, -1), input_shape=(input_shape[0], input_shape[1]))(X_input) 
     # Stage 1
-    X = ZeroPadding2D((2, 2))(X_input)
+    X = ZeroPadding2D((2, 2))(X)
     X = Conv2D(64, (3, 3), strides=(1, 1), padding='same', name='conv1')(X)
     X = BatchNormalization(axis=3, name='bn_conv1')(X)
     X = Activation('relu')(X)
@@ -149,16 +146,19 @@ def resnet(input_shape : Tuple[int, ...], output_shape : Tuple[int, ...]) -> Mod
     X = Dense(num_classes, activation='softmax')(X)
 
     model = Model(inputs=X_input, outputs=X)
-    model.summary()
 
     return model
 
 # def dummy():
     
 #     # Define the input as a tensor with shape input_shape
-#     X_input = Input((28, 28 , 1))
+#     input_shape = (28, 28)
+
+#     X_input = Input(input_shape)
+#     if len(input_shape) < 3:
+#         X = Lambda(lambda x: tf.expand_dims(x, -1), input_shape=(input_shape[0], input_shape[1]))(X_input) 
 #     # Stage 1
-#     X = ZeroPadding2D((2, 2))(X_input)
+#     X = ZeroPadding2D((2, 2))(X)
 #     X = Conv2D(64, (3, 3), strides=(1, 1), padding='same', name='conv1')(X)
 #     X = BatchNormalization(axis=3, name='bn_conv1')(X)
 #     X = Activation('relu')(X)

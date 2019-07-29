@@ -15,6 +15,7 @@ from src.training.util import train_model
 from src.data.emnist_dataset import EMNIST
 from src.models.character_model import Character_Model
 from src.networks.lenet import lenet
+from src.networks.resnet import resnet
 import argparse
 
 def _parse_args():
@@ -39,7 +40,7 @@ def _parse_args():
     return args
 
 
-funcs = {'EMNIST': EMNIST, 'lenet': lenet, 'Character_Model': Character_Model}
+funcs = {'EMNIST': EMNIST, 'lenet': lenet, 'resnet' : resnet, 'Character_Model': Character_Model}
 
 
 def train(args, use_comet : bool = True):
