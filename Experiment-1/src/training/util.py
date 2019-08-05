@@ -5,7 +5,8 @@ from __future__ import division
 from __future__ import print_function
 
 import time
-from tensorflow.keras.callbacks import EarlyStopping
+#from tensorflow.keras.callbacks import EarlyStopping
+from keras.callbacks import EarlyStopping
 from src.data.dataset import Dataset
 from src.models.base_model import Model
 #from src.visualization.visualize import plot_history

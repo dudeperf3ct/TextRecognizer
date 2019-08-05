@@ -12,7 +12,8 @@ np.random.seed(42)
 
 from pathlib import Path
 from typing import Callable, Dict, Optional, Tuple
-from tensorflow.keras.optimizers import RMSprop
+from keras.optimizers import RMSprop
+#from tensorflow.keras.optimizers import RMSprop
 from src.data.emnist_dataset import EMNIST
 from src.networks.lenet import lenet
 
