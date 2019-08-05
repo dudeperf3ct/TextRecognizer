@@ -18,6 +18,7 @@ from src.data.emnist_dataset import EMNIST
 from src.networks.lenet import lenet
 
 WEIGHTS_DIR = Path(__file__).parents[2].resolve() / 'models'
+learning_rate = 1e-4
 
 class Model:
     """
@@ -112,7 +113,7 @@ class Model:
         return 'categorical_crossentropy'
 
     def optimizer(self):
-        return RMSprop()
+        return RMSprop(lr=learning_rate)
 
     def metrics(self):
         return ['accuracy']
