@@ -5,9 +5,9 @@ from __future__ import division
 from __future__ import print_function
 
 from typing import Tuple
-#import tensorflow as tf
-#from tensorflow.keras.layers import Conv2D, Dense, Dropout, Flatten, Lambda, MaxPooling2D
-#from tensorflow.keras.models import Sequential, Model
+# import tensorflow as tf
+# from tensorflow.keras.layers import Conv2D, Dense, Dropout, Flatten, Lambda, MaxPooling2D
+# from tensorflow.keras.models import Sequential, Model
 import keras.backend as K
 from keras.layers import Conv2D, Dense, Dropout, Flatten, Lambda, MaxPooling2D
 from keras.models import Sequential, Model

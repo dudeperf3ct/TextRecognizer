@@ -14,8 +14,6 @@ from pathlib import Path
 from typing import Callable, Dict, Optional, Tuple
 from keras.optimizers import RMSprop
 #from tensorflow.keras.optimizers import RMSprop
-from src.data.emnist_dataset import EMNIST
-from src.networks.lenet import lenet
 
 WEIGHTS_DIR = Path(__file__).parents[2].resolve() / 'models'
 learning_rate = 1e-4

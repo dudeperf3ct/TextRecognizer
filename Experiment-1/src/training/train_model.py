@@ -56,19 +56,19 @@ def train(args, use_comet : bool = True):
     (x_train, y_train), (x_test, y_test) = data.load_data()
     classes = data.mapping
     
-    # #Used for testing only
-    # x_train = x_train[:100, :, :]
-    # y_train = y_train[:100, :]
-    # x_test = x_test[:100, :, :]
-    # y_test = y_test[:100, :]
-    # print ('[INFO] Training shape: ', x_train.shape, y_train.shape)
-    # print ('[INFO] Test shape: ', x_test.shape, y_test.shape)
-    # #delete these lines
+    #Used for testing only
+    x_train = x_train[:100, :, :]
+    y_train = y_train[:100, :]
+    x_test = x_test[:100, :, :]
+    y_test = y_test[:100, :]
+    print ('[INFO] Training shape: ', x_train.shape, y_train.shape)
+    print ('[INFO] Test shape: ', x_test.shape, y_test.shape)
+    #delete these lines
 
     y_labels = [np.where(y_train[idx]==1)[0][0] for idx in range(len(y_train))]
     # distribute 98% train 2% val dataset with equal class distribution 
     (x_train, x_valid, y_train, y_valid) = train_test_split(x_train, y_train, test_size=0.2,
-                                                 stratify=y_labels, random_state=42)
+                                                 random_state=42)
 
     print ('[INFO] Training shape: ', x_train.shape, y_train.shape)
     print ('[INFO] Validation shape: ', x_valid.shape, y_valid.shape)

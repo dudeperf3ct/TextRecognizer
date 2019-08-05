@@ -5,11 +5,14 @@ from __future__ import division
 from __future__ import print_function
 
 from typing import Tuple
-import tensorflow as tf
-from tensorflow.keras.layers import Conv2D, Dense, Dropout, Flatten, Lambda, MaxPooling2D, GlobalAveragePooling2D
-from tensorflow.keras.layers import Input, ZeroPadding2D, Activation, BatchNormalization, Add
-from tensorflow.keras.models import Sequential, Model
-
+# import tensorflow as tf
+# from tensorflow.keras.layers import Conv2D, Dense, Dropout, Flatten, Lambda, GlobalAveragePooling2D, Input
+# from tensorflow.keras.layers import MaxPooling2D, ZeroPadding2D, Activation, BatchNormalization, Add
+# from tensorflow.keras.models import Sequential, Model
+import keras.backend as K
+from keras.layers import Conv2D, Dense, Dropout, Flatten, Lambda, GlobalAveragePooling2D, Input
+from keras.layers import MaxPooling2D, ZeroPadding2D, Activation, BatchNormalization, Add
+from keras.models import Sequential, Model
 
 def _bn_relu(x, bn_name : str = "bn_name", relu_name : str = "relu_name"):
     """Helper to build a BN => RELU block
@@ -104,7 +107,7 @@ def resnet(input_shape : Tuple[int, ...], output_shape : Tuple[int, ...]) -> Mod
 
     X_input = Input(input_shape)
     if len(input_shape) < 3:
-        X = Lambda(lambda x: tf.expand_dims(x, -1), input_shape=(input_shape[0], input_shape[1]))(X_input) 
+        X = Lambda(lambda x: K.expand_dims(x, -1), input_shape=(input_shape[0], input_shape[1]))(X_input) 
     # Stage 1
     X = ZeroPadding2D((2, 2))(X)
     X = Conv2D(64, (3, 3), strides=(1, 1), padding='same', name='conv1')(X)
