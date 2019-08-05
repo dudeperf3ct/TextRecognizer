@@ -3,6 +3,8 @@ from __future__ import division
 from __future__ import print_function
 
 import matplotlib.pyplot as plt
+#from tensorflow.keras.utils import plot_model
+from keras.utils import plot_model
 
 def plot_history(history):
     # Plot training & validation accuracy values
@@ -22,3 +24,6 @@ def plot_history(history):
     plt.xlabel('Epoch')
     plt.legend(['Train', 'Test'], loc='upper left')
     plt.show()
+
+def save_model(model):
+    plot_model(model, to_file='model.png')

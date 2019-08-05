@@ -9,7 +9,9 @@ import time
 from keras.callbacks import EarlyStopping
 from src.data.dataset import Dataset
 from src.models.base_model import Model
-#from src.visualization.visualize import plot_history
+import sys
+sys.path.append(str(Path(__file__).resolve().parents[2]))
+from src.visualization.visualize import plot_history, save_model
 
 EARLY_STOPPING = True
 
@@ -35,6 +37,7 @@ def train_model(
                          callbacks=callbacks)
     print('[INFO] Training took {:2f} s'.format(time.time() - t))
 
-    #plot_history(_history)
+    plot_history(_history)
+    save_model(model.network)
 
     return model
