@@ -1,4 +1,4 @@
-"""Builds the Lenet Model"""
+"""Builds the CustomCNN Model"""
 
 from __future__ import absolute_import
 from __future__ import division

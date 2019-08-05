@@ -38,7 +38,7 @@ def train_model(
                          callbacks=callbacks)
     print('[INFO] Training took {:2f} s'.format(time.time() - t))
 
-    plot_history(_history)
-    save_model(model.network)
+    #plot_history(_history)
+    #save_model(model.network)
 
     return model
