@@ -66,8 +66,8 @@ def train(args, use_comet : bool = True):
     # #delete these lines
 
     y_labels = [np.where(y_train[idx]==1)[0][0] for idx in range(len(y_train))]
-    # distribute 98% train 2% val dataset with equal class distribution 
-    (x_train, x_valid, y_train, y_valid) = train_test_split(x_train, y_train, test_size=0.2,
+    # distribute 99% train 1% val dataset with equal class distribution 
+    (x_train, x_valid, y_train, y_valid) = train_test_split(x_train, y_train, test_size=0.1,
                                                  random_state=42)
 
     print ('[INFO] Training shape: ', x_train.shape, y_train.shape)
@@ -107,7 +107,7 @@ def train(args, use_comet : bool = True):
         #will log metrics with the prefix 'test_'
         with experiment.test():  
             loss, score = model.evaluate(dataset, args['batch_size'])
-            print(f'[INFO] Test evaluation: {score}')
+            print(f'[INFO] Test evaluation: {score*100}')
             metrics = {
                 'loss':loss,
                 'accuracy':score

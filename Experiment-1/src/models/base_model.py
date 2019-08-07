@@ -102,7 +102,7 @@ class Model:
     #             tmp /= 255.0
     #             yield tmp, dataset['y_test'][i*batch_size:(i+1)*batch_size]
 
-    def evaluate(self, dataset, batch_size=16, verbose=False):
+    def evaluate(self, dataset, batch_size=16):
         #t_generator = self.test_generator(dataset, batch_size=batch_size)  # Use a small batch size to use less memory
         loss, accuracy = self.network.evaluate(dataset['x_test'], dataset['y_test'], batch_size=batch_size)
         return loss, accuracy
