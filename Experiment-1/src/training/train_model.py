@@ -128,7 +128,7 @@ def train(args, use_comet : bool = True):
             )
         print ('[INFO] Starting Testing...')    
         loss, score = model.evaluate(dataset, args['batch_size'])
-        print(f'[INFO] Test evaluation: {score}')
+        print(f'[INFO] Test evaluation: {score*100}')
 
     if args['weights']:
         model.save_weights()

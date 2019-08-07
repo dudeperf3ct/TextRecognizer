@@ -89,7 +89,8 @@ class Model:
                     validation_data=val_generator,
                     validation_steps=iters_test,
                     use_multiprocessing=True,
-                    shuffle=True
+                    shuffle=True,
+                    verbose=2
                 )
         return history
 
