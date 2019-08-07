@@ -13,8 +13,14 @@ from pathlib import Path
 import sys
 sys.path.append(str(Path(__file__).resolve().parents[2]))
 #from src.visualization.visualize import plot_history, save_model
+from src.clr_callback import CyclicLR
 
 EARLY_STOPPING = True
+CYCLIC_LR = True
+MIN_LR = 1e-7
+MAX_LR = 1e-2
+STEP_SIZE = 8
+MODE = "triangular"
 
 def train_model(
         model: Model,
@@ -28,6 +34,12 @@ def train_model(
         early_stopping = EarlyStopping(monitor='val_loss', min_delta=0.01, 
                          patience=3, verbose=1, mode='auto')
         callbacks.append(early_stopping)
+
+    if CYCLIC_LR:
+        cyclic_lr = CyclicLR(base_lr=MIN_LR, max_lr=MAX_LR,
+                             step_size=STEP_SIZE * (dataset['train_x'].shape[0] // batch_size), 
+                             mode=MODE)
+        callbacks.append(cyclic_lr)
 
     model.network.summary()
 
