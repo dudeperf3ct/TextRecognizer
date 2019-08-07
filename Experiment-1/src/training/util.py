@@ -14,43 +14,75 @@ import sys
 sys.path.append(str(Path(__file__).resolve().parents[2]))
 #from src.visualization.visualize import plot_history, save_model
 from src.clr_callback import CyclicLR
+from src.training.lr_find import LearningRateFinder
+import matplotlib.pyplot as plt
 
 EARLY_STOPPING = True
 CYCLIC_LR = True
-MIN_LR = 1e-7
+MIN_LR = 1e-5
 MAX_LR = 1e-2
-STEP_SIZE = 8
+STEP_SIZE = 4
 MODE = "triangular"
+SAVE_LR_PLOT = '../models/plot_lr.png'
 
 def train_model(
         model: Model,
         dataset: Dataset,
         epochs: int,
-        batch_size: int) -> Model:
+        batch_size: int,
+        FIND_LR : bool = False) -> Model:
     """Train model."""
     callbacks = []
 
-    if EARLY_STOPPING:
-        early_stopping = EarlyStopping(monitor='val_loss', min_delta=0.01, 
-                         patience=3, verbose=1, mode='auto')
-        callbacks.append(early_stopping)
+    if FIND_LR :
+        # initialize the learning rate finder and then train with learning
+        # rates ranging from 1e-10 to 1e+1
+        print("[INFO] finding learning rate...")
+        lrf = LearningRateFinder(model)
+        lrf.find(
+            dataset,
+            1e-10, 
+            1e+1,
+            stepsPerEpoch=np.ceil((len(dataset['x_train']) / float(batch_size))),
+            batchSize=batch_size)
 
-    if CYCLIC_LR:
-        cyclic_lr = CyclicLR(base_lr=MIN_LR, max_lr=MAX_LR,
-                             step_size=STEP_SIZE * (dataset['x_train'].shape[0] // batch_size), 
-                             mode=MODE)
-        callbacks.append(cyclic_lr)
+        # plot the loss for the various learning rates and save the
+        # resulting plot to disk
+        lrf.plot_loss()
+        plt.savefig(SAVE_LR_PLOT)
 
-    model.network.summary()
+        # gracefully exit the script so we can adjust our learning rates
+        # in the config and then train the network for our full set of
+        # epochs
+        print("[INFO] learning rate finder complete")
+        print("[INFO] examine plot and adjust learning rates before training")
+        sys.exit(0)
 
-    t = time.time()
-    _history = model.fit(dataset=dataset, 
-                         batch_size=batch_size, 
-                         epochs=epochs, 
-                         callbacks=callbacks)
-    print('[INFO] Training took {:2f} s'.format(time.time() - t))
+    else:
+        if EARLY_STOPPING:
+            early_stopping = EarlyStopping(monitor='val_loss', min_delta=0.01, 
+                            patience=3, verbose=1, mode='auto')
+            callbacks.append(early_stopping)
 
-    #plot_history(_history)
-    #save_model(model.network)
+        if CYCLIC_LR:
+            cyclic_lr = CyclicLR(base_lr=MIN_LR, max_lr=MAX_LR,
+                                step_size=STEP_SIZE * (dataset['x_train'].shape[0] // batch_size), 
+                                mode=MODE)
+            callbacks.append(cyclic_lr)
 
-    return model
+        model.network.summary()
+
+        t = time.time()
+        _history = model.fit(dataset=dataset, 
+                            batch_size=batch_size, 
+                            epochs=epochs, 
+                            callbacks=callbacks)
+        print('[INFO] Training took {:2f} s'.format(time.time() - t))
+
+        #plot_history(_history)
+        #save_model(model.network)
+
+        return model
+
+
+

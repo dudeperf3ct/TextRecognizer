@@ -36,7 +36,9 @@ def _parse_args():
     parser.add_argument("-e", '--epochs', type=int, default=10,
         help="Number of epochs")
     parser.add_argument("-b", '--batch_size', type=int, default=32,
-        help="Batch size")        
+        help="Batch size") 
+    parser.add_argument("-find_lr", '--find_lr', type=bool, default=False,
+        help="Find lr")        
     args = vars(parser.parse_args())
 
     return args
@@ -56,14 +58,14 @@ def train(args, use_comet : bool = True):
     (x_train, y_train), (x_test, y_test) = data.load_data()
     classes = data.mapping
     
-    # #Used for testing only
-    # x_train = x_train[:100, :, :]
-    # y_train = y_train[:100, :]
-    # x_test = x_test[:100, :, :]
-    # y_test = y_test[:100, :]
-    # print ('[INFO] Training shape: ', x_train.shape, y_train.shape)
-    # print ('[INFO] Test shape: ', x_test.shape, y_test.shape)
-    # #delete these lines
+    #Used for testing only
+    x_train = x_train[:100, :, :]
+    y_train = y_train[:100, :]
+    x_test = x_test[:100, :, :]
+    y_test = y_test[:100, :]
+    print ('[INFO] Training shape: ', x_train.shape, y_train.shape)
+    print ('[INFO] Test shape: ', x_test.shape, y_test.shape)
+    #delete these lines
 
     y_labels = [np.where(y_train[idx]==1)[0][0] for idx in range(len(y_train))]
     # distribute 99% train 1% val dataset with equal class distribution 
@@ -100,7 +102,8 @@ def train(args, use_comet : bool = True):
                     model,
                     dataset,
                     batch_size=args['batch_size'],
-                    epochs=args['epochs']
+                    epochs=args['epochs'],
+                    args['find_lr']
                     )
 
         print ('[INFO] Starting Testing...')    
