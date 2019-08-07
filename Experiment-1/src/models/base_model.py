@@ -16,7 +16,6 @@ from keras.optimizers import RMSprop
 #from tensorflow.keras.optimizers import RMSprop
 
 WEIGHTS_DIR = Path(__file__).parents[2].resolve() / 'models'
-learning_rate = 1e-4
 
 class Model:
     """
@@ -67,11 +66,11 @@ class Model:
                 tmp /= 255.0
                 yield tmp, dataset['y_valid'][i*batch_size:(i+1)*batch_size]
 
-    def fit(self, dataset, batch_size : int = 32, epochs : int = 10, callbacks : list = None):
+    def fit(self, dataset, batch_size : int = 32, epochs : int = 10, callbacks : list = None, lr : float):
         if callbacks is None:
             callbacks = []
         #compile the network
-        self.network.compile(loss=self.loss(), optimizer=self.optimizer(), metrics=self.metrics())
+        self.network.compile(loss=self.loss(), optimizer=self.optimizer(lr), metrics=self.metrics())
         #get the batches from generator
         shuff_index = np.random.permutation(dataset['x_train'].shape[0])
         trn_generator = self.train_generator(dataset, shuff_index, batch_size=batch_size)
@@ -111,8 +110,8 @@ class Model:
     def loss(self):
         return 'categorical_crossentropy'
 
-    def optimizer(self):
-        return RMSprop(lr=learning_rate)
+    def optimizer(self, lr):
+        return RMSprop(lr)
 
     def metrics(self):
         return ['accuracy']

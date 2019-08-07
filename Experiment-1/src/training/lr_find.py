@@ -41,7 +41,7 @@ class LearningRateFinder:
 	def on_batch_end(self, batch, logs):
 		# grab the current learning rate and add log it to the list of
 		# learning rates that we've tried
-		lr = K.get_value(self.model.optimizer.lr)
+		lr = K.get_value(self.model.network.optimizer.lr)
 		self.lrs.append(lr)
 
 		# grab the loss at the end of this batch, increment the total
@@ -109,11 +109,11 @@ class LearningRateFinder:
 		callback = LambdaCallback(on_batch_end=lambda batch, logs:
 			self.on_batch_end(batch, logs))
 
-        self.model.fit(dataset=dataset, 
-                batch_size=batch_size, 
-                epochs=epochs, 
-                callbacks=callbacks)            
-
+        _history = model.fit(dataset=dataset, 
+                            batch_size=batch_size,
+                            epochs=epochs,
+                            callbacks=callbacks,
+                            lr=startLR)
 		# restore the original model weights and learning rate
 		self.model.network.load_weights(self.weightsFile)
 		K.set_value(self.model.network.optimizer.lr, origLR)

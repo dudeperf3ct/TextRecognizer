@@ -19,6 +19,7 @@ import matplotlib.pyplot as plt
 
 EARLY_STOPPING = True
 CYCLIC_LR = True
+# adjust min_lr and max_lr after plotting lr_find
 MIN_LR = 1e-5
 MAX_LR = 1e-2
 STEP_SIZE = 4
@@ -76,7 +77,8 @@ def train_model(
         _history = model.fit(dataset=dataset, 
                             batch_size=batch_size, 
                             epochs=epochs, 
-                            callbacks=callbacks)
+                            callbacks=callbacks,
+                            lr=MIN_LR)
         print('[INFO] Training took {:2f} s'.format(time.time() - t))
 
         #plot_history(_history)
