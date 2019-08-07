@@ -37,7 +37,7 @@ def train_model(
 
     if CYCLIC_LR:
         cyclic_lr = CyclicLR(base_lr=MIN_LR, max_lr=MAX_LR,
-                             step_size=STEP_SIZE * (dataset['train_x'].shape[0] // batch_size), 
+                             step_size=STEP_SIZE * (dataset['x_train'].shape[0] // batch_size), 
                              mode=MODE)
         callbacks.append(cyclic_lr)
 
