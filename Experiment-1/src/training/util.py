@@ -51,6 +51,7 @@ def train_model(
         # plot the loss for the various learning rates and save the
         # resulting plot to disk
         lrf.plot_loss()
+        plt.show()
         plt.savefig(SAVE_LR_PLOT)
 
         # gracefully exit the script so we can adjust our learning rates
@@ -83,6 +84,7 @@ def train_model(
         print('[INFO] Training took {:2f} s'.format(time.time() - t))
 
         plot_history(_history)
+        plt.show()
         #save_model(model.network)
 
         return model

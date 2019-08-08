@@ -112,7 +112,6 @@ class LearningRateFinder:
         plt.xscale("log")
         plt.xlabel("Learning Rate (Log Scale)")
         plt.ylabel("Loss")
-        plt.show()
 
         # if the title is not empty, add it to the plot
         if title != "":
