@@ -27,6 +27,7 @@ processed_folder = root_folder/'processed'
 url = 'https://s3-us-west-2.amazonaws.com/fsdl-public-assets/matlab.zip'
 filename = raw_folder/'matlab.zip'
 ESSENTIALS_FILENAME = raw_folder/'emnist_essentials.json'
+SAMPLE_TO_BALANCE = True
 
 class EMNIST(Dataset):
     """
@@ -77,8 +78,13 @@ class EMNIST(Dataset):
         x_train = data['dataset']['train'][0, 0]['images'][0, 0].reshape(-1, 28, 28).swapaxes(1, 2)
         y_train = data['dataset']['train'][0, 0]['labels'][0, 0]
         x_test = data['dataset']['test'][0, 0]['images'][0, 0].reshape(-1, 28, 28).swapaxes(1, 2)
-        y_test = data['dataset']['test'][0, 0]['labels'][0, 0]
-        
+        y_test = data['dataset']['test'][0, 0]['labels'][0, 0] 
+
+        if SAMPLE_TO_BALANCE:
+            print('[INFO] Balancing classes to reduce amount of data...')
+            x_train, y_train = _sample_to_balance(x_train, y_train)
+            x_test, y_test = _sample_to_balance(x_test, y_test)
+
         print('[INFO] Saving to HDF5 in a compressed format...')
         PROCESSED_DATA_DIRNAME = processed_folder
         PROCESSED_DATA_FILENAME = PROCESSED_DATA_DIRNAME/'byclass.h5'
@@ -130,6 +136,20 @@ class EMNIST(Dataset):
             f'Mapping: {self.mapping}\n'
             f'Input shape: {self.input_shape}\n'
         )  
+
+def _sample_to_balance(x, y):
+    """Because the dataset is not balanced, we take at most the mean number of instances per class."""
+    np.random.seed(42)
+    num_to_sample = int(np.bincount(y.flatten()).mean())
+    all_sampled_inds = []
+    for label in np.unique(y.flatten()):
+        inds = np.where(y == label)[0]
+        sampled_inds = np.unique(np.random.choice(inds, num_to_sample))
+        all_sampled_inds.append(sampled_inds)
+    ind = np.concatenate(all_sampled_inds)
+    x_sampled = x[ind]
+    y_sampled = y[ind]
+    return x_sampled, y_sampled        
 
 
 def main():

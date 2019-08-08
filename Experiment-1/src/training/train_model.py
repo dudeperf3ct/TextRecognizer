@@ -70,7 +70,7 @@ def train(args, use_comet : bool = True):
     # #delete these lines
 
     y_test_labels = [np.where(y_test[idx]==1)[0][0] for idx in range(len(y_test))]
-    # distribute 90% train 10% val dataset with equal class distribution 
+    # distribute 90% test 10% val dataset with equal class distribution 
     (x_test, x_valid, y_test, y_valid) = train_test_split(x_test, y_test, test_size=0.1,
                                             stratify=y_test_labels, random_state=42)
 
