@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 #from tensorflow.keras.utils import plot_model
 from keras.utils import plot_model
 
-def plot_history(history):
+def plot_history(history, name):
     # Plot training & validation accuracy values
     plt.plot(history.history['acc'])
     plt.plot(history.history['val_acc'])
@@ -14,7 +14,7 @@ def plot_history(history):
     plt.ylabel('Accuracy')
     plt.xlabel('Epoch')
     plt.legend(['Train', 'Test'], loc='upper left')
-    plt.show()
+    plt.save_fig('train'+str(name)+'.png')
 
     # Plot training & validation loss values
     plt.plot(history.history['loss'])
@@ -23,7 +23,7 @@ def plot_history(history):
     plt.ylabel('Loss')
     plt.xlabel('Epoch')
     plt.legend(['Train', 'Test'], loc='upper left')
-    plt.show()
+    plt.save_fig('val'+str(name)+'.png')
 
-def save_model(model):
-    plot_model(model, to_file='model.png')
+def save_model(model, name):
+    plot_model(model, to_file=str(name)+'_model.png')

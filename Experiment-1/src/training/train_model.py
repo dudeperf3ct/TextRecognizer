@@ -104,7 +104,8 @@ def train(args, use_comet : bool = True):
                     model,
                     dataset,
                     batch_size=args['batch_size'],
-                    epochs=args['epochs']
+                    epochs=args['epochs'],
+                    args['network']
                     )
 
         print ('[INFO] Starting Testing...')    
@@ -129,7 +130,8 @@ def train(args, use_comet : bool = True):
                     dataset,
                     batch_size=args['batch_size'],
                     epochs=args['epochs'],
-                    FIND_LR=args['find_lr']
+                    FIND_LR=args['find_lr'],
+                    args['network']
                     )
 
     else :
@@ -139,7 +141,8 @@ def train(args, use_comet : bool = True):
             model,
             dataset,
             batch_size=args['batch_size'],
-            epochs=args['epochs']
+            epochs=args['epochs'],
+            args['network']
             )
         print ('[INFO] Starting Testing...')    
         loss, score = model.evaluate(dataset, args['batch_size'])

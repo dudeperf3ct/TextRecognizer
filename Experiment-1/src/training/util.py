@@ -25,14 +25,15 @@ MIN_LR = 1e-5
 MAX_LR = 1e-3
 STEP_SIZE = 8
 MODE = "triangular"
-SAVE_LR_PLOT = '../models/plot_lr.png'
+SAVE_LR_PLOT = '../models/'
 
 def train_model(
         model: Model,
         dataset: Dataset,
         epochs: int,
         batch_size: int,
-        FIND_LR : bool = False) -> Model:
+        FIND_LR : bool = False,
+        name : str) -> Model:
     """Train model."""
     callbacks = []
 
@@ -52,7 +53,7 @@ def train_model(
         # resulting plot to disk
         lrf.plot_loss()
         plt.show()
-        plt.savefig(SAVE_LR_PLOT)
+        plt.savefig(SAVE_LR_PLOT + str(name) + '_lr.png')
 
         # gracefully exit the script so we can adjust our learning rates
         # in the config and then train the network for our full set of
@@ -83,9 +84,8 @@ def train_model(
                             lr=MIN_LR)
         print('[INFO] Training took {:2f} s'.format(time.time() - t))
 
-        plot_history(_history)
-        plt.show()
-        #save_model(model.network)
+        plot_history(_history, name)
+        save_model(model.network, name)
 
         return model
 

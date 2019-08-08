@@ -53,7 +53,7 @@ def customCNN(input_shape : Tuple[int, ...], output_shape : Tuple[int, ...]) -> 
     model.add(LeakyReLU())
     model.add(BatchNormalization())
     model.add(Dropout(0.2))
-    #Input (512,)  -> Output (num_classes,)
+    #Input (128,)  -> Output (num_classes,)
     model.add(Dense(num_classes, activation='softmax'))
 
     return model
@@ -86,12 +86,12 @@ def customCNN(input_shape : Tuple[int, ...], output_shape : Tuple[int, ...]) -> 
 #     #Input (10, 10, 64)  -> Output (6400,)
 #     model.add(Flatten())
 #     model.add(BatchNormalization())
-#     #Input (6400,)  -> Output (512,)
-#     model.add(Dense(512))
+#     #Input (6400,)  -> Output (128,)
+#     model.add(Dense(128))
 #     model.add(LeakyReLU())
 #     model.add(BatchNormalization())
 #     model.add(Dropout(0.2))
-#     #Input (512,)  -> Output (num_classes,)
+#     #Input (128,)  -> Output (num_classes,)
 #     model.add(Dense(num_classes, activation='softmax'))
 #     model.summary()
 #     return model
