@@ -27,6 +27,8 @@ def _parse_args():
         help="whether or not model should be saved")
     parser.add_argument("-w", "--weights", type=str, default=True,
         help="whether or not weights should be saved")
+    parser.add_argument("-save_model", "--save_model", type=str, default=False,
+        help="whether or not model should be saved")
     parser.add_argument("-m", '--model', type=str, default="Character_Model",
         help="which model to use")
     parser.add_argument("-n", '--network', type=str, default="lenet",
@@ -146,7 +148,9 @@ def train(args, use_comet : bool = True):
     if args['weights']:
         model.save_weights()
     
-    
+    if args['save_model']:
+        model.save_model()
+        
 
 def main():
     """Run experiment."""

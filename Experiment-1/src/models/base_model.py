@@ -16,6 +16,8 @@ from keras.optimizers import RMSprop
 #from tensorflow.keras.optimizers import RMSprop
 
 WEIGHTS_DIR = Path(__file__).parents[2].resolve() / 'models'
+MODEL_DIR = Path(__file__).parents[2].resolve() / 'models'
+
 
 class Model:
     """
@@ -46,6 +48,17 @@ class Model:
             else:
                 raise
         return str(WEIGHTS_DIR/f'{self.name}_weights.h5')
+
+    @property
+    def model_filename(self) -> str:
+        try:
+            os.makedirs(MODEL_DIR)
+        except OSError as e:
+            if e.errno == errno.EEXIST:
+                pass
+            else:
+                raise
+        return str(MODEL_DIR/f'{self.name}_model.h5')
     
     def train_generator(self, dataset, shuff_index, batch_size):
         num_iters = int(np.ceil(dataset['x_train'].shape[0] / batch_size))
@@ -113,3 +126,7 @@ class Model:
     def save_weights(self):
         self.network.save_weights(self.weights_filename)
         print ('[INFO] Weights saved at', self.weights_filename)
+
+    def save_model(self):
+        self.network.save(self.model_filename)
+        print ('[INFO] Model saved at', self.model_filename)        
