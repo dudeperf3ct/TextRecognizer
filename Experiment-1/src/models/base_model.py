@@ -88,7 +88,7 @@ class Model:
         shuff_index = np.random.permutation(dataset['x_train'].shape[0])
         trn_generator = self.train_generator(dataset, shuff_index, batch_size=batch_size)
         val_generator = self.valid_generator(dataset, batch_size=batch_size)
-        
+
         iters_train = int(np.ceil(dataset['x_train'].shape[0] / float(batch_size)))
         iters_test = int(np.ceil(dataset['x_valid'].shape[0] / float(batch_size)))
         print ('Number:', iters_train, iters_test)
@@ -101,14 +101,22 @@ class Model:
                     validation_data=val_generator,
                     validation_steps=iters_test,
                     use_multiprocessing=True,
-                    shuffle=True,
                     verbose=2
                 )
         return history
 
-    def evaluate(self, dataset, batch_size=16):
-        loss, accuracy = self.network.evaluate(dataset['x_test'], dataset['y_test'], 
-                                                batch_size=batch_size, verbose=2)
+    def test_generator(self, dataset, batch_size : int):
+        num_iters = int(np.ceil(dataset['x_test'].shape[0] / batch_size))
+        while 1:
+            for i in range(num_iters):
+                tmp = dataset['x_test'][i*batch_size:(i+1)*batch_size].astype('float32')
+                tmp /= 255.0
+                yield tmp, dataset['y_test'][i*batch_size:(i+1)*batch_size]
+
+    def evaluate(self, dataset, batch_size : int = 16):
+        t_generator = self.test_generator(dataset, batch_size=batch_size)
+        iters_test = int(np.ceil(dataset['x_test'].shape[0] / float(batch_size)))
+        loss, accuracy = self.network.evaluate_generator(t_generator, steps=iters_test, verbose=2)
         return loss, accuracy
 
     def loss(self):
