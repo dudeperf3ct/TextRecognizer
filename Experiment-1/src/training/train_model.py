@@ -68,7 +68,7 @@ def train(args, use_comet : bool = True):
     # #delete these lines
 
     y_test_labels = [np.where(y_test[idx]==1)[0][0] for idx in range(len(y_test))]
-    # distribute 99% train 1% val dataset with equal class distribution 
+    # distribute 90% train 10% val dataset with equal class distribution 
     (x_test, x_valid, y_test, y_valid) = train_test_split(x_test, y_test, test_size=0.1,
                                             stratify=y_test_labels, random_state=42)
 
@@ -118,6 +118,7 @@ def train(args, use_comet : bool = True):
 
         experiment.log_parameters(args)
         experiment.log_dataset_hash(x_train) #creates and logs a hash of your data 
+        experiment.end()
 
     elif use_comet and args['find_lr'] == True:
 
@@ -144,7 +145,8 @@ def train(args, use_comet : bool = True):
 
     if args['weights']:
         model.save_weights()
-
+    
+    
 
 def main():
     """Run experiment."""
