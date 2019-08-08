@@ -32,8 +32,8 @@ def train_model(
         dataset: Dataset,
         epochs: int,
         batch_size: int,
-        FIND_LR : bool = False,
-        name : str) -> Model:
+        name : str,
+        FIND_LR : bool = False) -> Model:
     """Train model."""
     callbacks = []
 
