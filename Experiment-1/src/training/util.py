@@ -51,10 +51,8 @@ def train_model(
 
         # plot the loss for the various learning rates and save the
         # resulting plot to disk
-        lrf.plot_loss()
-        plt.show()
-        plt.savefig(SAVE_LR_PLOT + str(name) + '_lr.png')
-
+        lrf.plot_loss(name)
+ 
         # gracefully exit the script so we can adjust our learning rates
         # in the config and then train the network for our full set of
         # epochs

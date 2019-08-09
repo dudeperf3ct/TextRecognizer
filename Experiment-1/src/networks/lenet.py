@@ -18,7 +18,7 @@ def lenet(input_shape : Tuple[int, ...], output_shape : Tuple[int, ...]) -> Mode
     INPUT => CONV => RELU => CONV => RELU => POOL => DROPOUT => Flatten => FC => RELU => DROPOUT => FC
     Args:
     input_shape : shape of the input tensor
-    num_classes : number of classes
+    output_shape : shape of the output tensor
 
     Returns:
     Lenet Model

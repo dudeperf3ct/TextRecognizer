@@ -5,6 +5,7 @@ from keras import backend as K
 import matplotlib.pyplot as plt
 import numpy as np
 import tempfile
+SAVE_LR_PLOT = '../models/'
 
 class LearningRateFinder:
     def __init__(self, model, stopFactor=4, beta=0.98):
@@ -102,7 +103,7 @@ class LearningRateFinder:
                         lr=startLR)
 
 
-    def plot_loss(self, skipBegin=10, skipEnd=1, title=""):
+    def plot_loss(self, name, skipBegin=10, skipEnd=1, title=""):
         # grab the learning rate and losses values to plot
         lrs = self.lrs[skipBegin:-skipEnd]
         losses = self.losses[skipBegin:-skipEnd]
@@ -116,3 +117,5 @@ class LearningRateFinder:
         # if the title is not empty, add it to the plot
         if title != "":
             plt.title(title)
+        plt.savefig(SAVE_LR_PLOT + str(name) + '_lr.png')
+
