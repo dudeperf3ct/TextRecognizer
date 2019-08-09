@@ -22,7 +22,7 @@ sys.path.append(str(Path(__file__).resolve().parents[2]))
 from src.data.dataset import Dataset
 from src import util
 
-root_folder = Path().absolute().parents[1]/'data'
+root_folder = Path(__file__).resolve().parents[2]/'data'
 raw_folder = root_folder/'raw'
 processed_folder = root_folder/'processed'
 url = 'https://s3-us-west-2.amazonaws.com/fsdl-public-assets/matlab.zip'

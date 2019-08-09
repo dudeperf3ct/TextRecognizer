@@ -14,7 +14,7 @@ import numpy as np
 import sys
 sys.path.append(str(Path(__file__).resolve().parents[2]))
 from src.visualization.visualize import plot_history, save_model
-from src.clr_callback import CyclicLR
+from src.training.clr_callback import CyclicLR
 from src.training.lr_find import LearningRateFinder
 import matplotlib.pyplot as plt
 
@@ -24,7 +24,7 @@ CYCLIC_LR = True
 MIN_LR = 1e-5
 MAX_LR = 1e-3
 STEP_SIZE = 8
-MODE = "triangular"
+MODE = "triangular2"
 SAVE_LR_PLOT = '../models/'
 
 def train_model(
