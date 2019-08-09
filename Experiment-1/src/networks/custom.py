@@ -9,7 +9,7 @@ from typing import Tuple
 # from tensorflow.keras.layers import Conv2D, Dense, Dropout, Flatten, Lambda, MaxPooling2D, LeakyReLU, BatchNormalization
 # from tensorflow.keras.models import Sequential, Model
 import keras.backend as K
-from keras.layers import Conv2D, Dense, Dropout, Flatten, Lambda
+from keras.layers import Conv2D, Dense, Dropout, Flatten, Lambda, ReLU
 from keras.layers import MaxPooling2D, LeakyReLU, BatchNormalization
 from keras.models import Sequential, Model
 
@@ -31,26 +31,26 @@ def customCNN(input_shape : Tuple[int, ...], output_shape : Tuple[int, ...]) -> 
         input_shape = (input_shape[0], input_shape[1], 1)
     #Input (28, 28, 1)  -> Output (26, 26, 32)
     model.add(Conv2D(32, (3,3)))
-    model.add(LeakyReLU())
+    model.add(ReLU())
     model.add(BatchNormalization())
     #Input (26, 26, 32)  -> Output (24, 24, 32)
     model.add(Conv2D(32, (3,3)))
-    model.add(LeakyReLU())
+    model.add(ReLU())
     model.add(BatchNormalization())
     #Input (24, 24, 32)  -> Output (22, 22, 64)
     model.add(Conv2D(64, (3,3)))
-    model.add(LeakyReLU())
+    model.add(ReLU())
     model.add(BatchNormalization())
     #Input (22, 22, 64)  -> Output (10, 10, 64)
     model.add(Conv2D(64, (3,3)))
-    model.add(LeakyReLU())
+    model.add(ReLU())
     model.add(MaxPooling2D())
     #Input (10, 10, 64)  -> Output (6400,)
     model.add(Flatten())
     model.add(BatchNormalization())
     #Input (6400,)  -> Output (128,)
     model.add(Dense(128))
-    model.add(LeakyReLU())
+    model.add(ReLU())
     model.add(BatchNormalization())
     model.add(Dropout(0.2))
     #Input (128,)  -> Output (num_classes,)

@@ -16,7 +16,7 @@ def plot_history(history, name):
     plt.ylabel('Accuracy')
     plt.xlabel('Epoch')
     plt.legend(['Train', 'Test'], loc='upper left')
-    plt.savefig(SAVE_PLOT + 'train'+ str(name) + '.png')
+    plt.savefig(SAVE_PLOT + 'train_'+ str(name) + '.png')
 
     # Plot training & validation loss values
     plt.plot(history.history['loss'])
@@ -25,7 +25,7 @@ def plot_history(history, name):
     plt.ylabel('Loss')
     plt.xlabel('Epoch')
     plt.legend(['Train', 'Test'], loc='upper left')
-    plt.savefig(SAVE_PLOT + 'val'+ str(name) + '.png')
+    plt.savefig(SAVE_PLOT + 'val_'+ str(name) + '.png')
 
 def save_model(model, name):
     plot_model(model, to_file=SAVE_PLOT + str(name)+ '_model.png')
