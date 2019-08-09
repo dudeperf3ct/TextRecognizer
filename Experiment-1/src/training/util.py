@@ -82,7 +82,8 @@ def train_model(
                             lr=MIN_LR)
         print('[INFO] Training took {:2f} s'.format(time.time() - t))
 
-        plot_history(_history, name)
+        plot_acc(_history, name)
+        plot_loss(_history, name)
         save_model(model.network, name)
 
         return model
