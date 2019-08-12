@@ -59,19 +59,17 @@ def train(args, use_comet : bool = True):
     (x_train, y_train), (x_test, y_test) = (data.x_train, data.y_train), (data.x_test, data.y_test)
     classes = data.mapping
     
-    #Used for testing only
-    x_train = x_train[:100, :, :]
-    y_train = y_train[:100, :]
-    x_test = x_test[:100, :, :]
-    y_test = y_test[:100, :]
-    print ('[INFO] Training shape: ', x_train.shape, y_train.shape)
-    print ('[INFO] Test shape: ', x_test.shape, y_test.shape)
-    #delete these lines
+    # #Used for testing only
+    # x_train = x_train[:100, :, :]
+    # y_train = y_train[:100, :]
+    # x_test = x_test[:100, :, :]
+    # y_test = y_test[:100, :]
+    # print ('[INFO] Training shape: ', x_train.shape, y_train.shape)
+    # print ('[INFO] Test shape: ', x_test.shape, y_test.shape)
+    # #delete these lines
 
-    y_test_labels = [np.where(y_test[idx]==1)[0][0] for idx in range(len(y_test))]
     # distribute 90% test 10% val dataset with equal class distribution 
-    (x_test, x_valid, y_test, y_valid) = train_test_split(x_test, y_test, test_size=0.1,
-                                            stratify=y_test_labels, random_state=42)
+    (x_test, x_valid, y_test, y_valid) = train_test_split(x_test, y_test, test_size=0.1, random_state=42)
 
     print ('[INFO] Training shape: ', x_train.shape, y_train.shape)
     print ('[INFO] Validation shape: ', x_valid.shape, y_valid.shape)
