@@ -29,7 +29,7 @@ def cnn(input_shape : Tuple[int, ...],
 
     image_height, image_width = input_shape    # 28, 
     output_length, num_classes = output_shape  # 34, 
-
+ 
     model = Sequential()
     # Input (28, 952) -> Output (28, 952, 1)
     model.add(Reshape((image_height, image_width, 1), input_shape=input_shape))
@@ -47,9 +47,9 @@ def cnn(input_shape : Tuple[int, ...],
     new_window_width = window_width // 2 - 2
     new_window_stride = window_stride // 2
     num_windows = int((new_width - new_window_width) / new_window_stride) + 1
-
+    
     # Input (12, 474, 64) -> Output (1, 118, 128)    
-    model.add(Conv2D(128, (new_height, new_window_width), (1, new_window_stride), activation='relu'))
+    model.add(Conv2D(128, (new_height, new_window_width), strides=(1, new_window_stride), activation='relu'))
     # Input (12, 474, 64) -> Output (1, 118, 128)    
     model.add(Dropout(0.2))
     
@@ -59,7 +59,7 @@ def cnn(input_shape : Tuple[int, ...],
     width = int(num_windows / output_length)
 
     # Input (118, 128, 1) -> Output (39, 1, 64)
-    model.add(Conv2D(num_classes, (width, 128), (width, 1), activation='softmax'))
+    model.add(Conv2D(num_classes, (width, 128), strides=(width, 1), activation='softmax'))
 
     # Input (39, 1, 64) -> Output (39, 64)
     model.add(Lambda(lambda x: K.squeeze(x, 2)))
@@ -70,41 +70,41 @@ def cnn(input_shape : Tuple[int, ...],
 
     return model
 
-def dummy():
-    input_shape = (28, 952)
-    output_shape = (34, 64)
-    window_width = 16
-    window_stride = 8
-    image_height, image_width = input_shape    # 28, 
-    output_length, num_classes = output_shape  # 34, 
+# def dummy():
+#     input_shape = (28, 952)
+#     output_shape = (34, 64)
+#     window_width = 16
+#     window_stride = 8
+#     image_height, image_width = input_shape    # 28, 
+#     output_length, num_classes = output_shape  # 34, 
 
-    model = Sequential()
-    model.add(Reshape((image_height, image_width, 1), input_shape=input_shape))
-    model.add(Conv2D(32, kernel_size=(3, 3), activation='relu'))
-    model.add(Conv2D(64, (3, 3), activation='relu'))
-    model.add(MaxPooling2D(pool_size=(2, 2)))
-    model.add(Dropout(0.2))
-    # (12, 474, 64)
+#     model = Sequential()
+#     model.add(Reshape((image_height, image_width, 1), input_shape=input_shape))
+#     model.add(Conv2D(32, kernel_size=(3, 3), activation='relu'))
+#     model.add(Conv2D(64, (3, 3), activation='relu'))
+#     model.add(MaxPooling2D(pool_size=(2, 2)))
+#     model.add(Dropout(0.2))
+#     # (12, 474, 64)
 
-    new_height = image_height // 2 - 2         #12
-    new_width = image_width // 2 - 2           #474
-    new_window_width = window_width // 2 - 2   #4
-    new_window_stride = window_stride // 2     #6
-    num_windows = int((new_width - new_window_width) / new_window_stride) + 1 #118
-    width = int(num_windows / output_length)   #3
+#     new_height = image_height // 2 - 2         #12
+#     new_width = image_width // 2 - 2           #474
+#     new_window_width = window_width // 2 - 2   #4
+#     new_window_stride = window_stride // 2     #6
+#     num_windows = int((new_width - new_window_width) / new_window_stride) + 1 #118
+#     width = int(num_windows / output_length)   #3
 
-    print (new_height, new_width)
-    print (new_window_stride, new_window_width)
-    print (num_windows, width)
+#     print (new_height, new_width)
+#     print (new_window_stride, new_window_width)
+#     print (num_windows, width)
 
-    model.add(Conv2D(128, (new_height, new_window_width), strides=(1, new_window_stride), activation='relu'))
-    model.add(Dropout(0.2))
-    # (num_windows, 128)
-    model.add(Reshape((num_windows, 128, 1)))
-    model.add(Conv2D(num_classes, (width, 128), strides=(width, 1), activation='softmax'))
-    model.add(Lambda(lambda x: K.squeeze(x, 2)))
-    model.add(Lambda(lambda x: x[:, :output_length, :]))
+#     model.add(Conv2D(128, (new_height, new_window_width), strides=(1, new_window_stride), activation='relu'))
+#     model.add(Dropout(0.2))
+#     # (num_windows, 128)
+#     model.add(Reshape((num_windows, 128, 1)))
+#     model.add(Conv2D(num_classes, (width, 128), strides=(width, 1), activation='softmax'))
+#     model.add(Lambda(lambda x: K.squeeze(x, 2)))
+#     model.add(Lambda(lambda x: x[:, :output_length, :]))
 
-    model.summary()
+#     model.summary()
 
-dummy()
+# dummy()

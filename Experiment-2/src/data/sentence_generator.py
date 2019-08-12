@@ -61,8 +61,8 @@ def load_nltk_brown_corpus():
         nltk.download('brown', download_dir=NLTK_DATA_DIRNAME)
     return nltk.corpus.brown.sents()
 
-from collections import Counter
-tx = brown_text()
-c = Counter(tx)
-print (sorted(c.keys()), len(c.keys()))
-print(c.most_common())
+# from collections import Counter
+# tx = brown_text()
+# c = Counter(tx)
+# print (sorted(c.keys()), len(c.keys()))
+# print(c.most_common())

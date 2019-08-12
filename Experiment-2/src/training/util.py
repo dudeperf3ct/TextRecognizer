@@ -13,7 +13,7 @@ from pathlib import Path
 import numpy as np
 import sys
 sys.path.append(str(Path(__file__).resolve().parents[2]))
-from src.visualization.visualize import plot_history, save_model
+from src.visualization.visualize import plot_loss, plot_acc, save_model
 from src.training.clr_callback import CyclicLR
 from src.training.lr_find import LearningRateFinder
 import matplotlib.pyplot as plt

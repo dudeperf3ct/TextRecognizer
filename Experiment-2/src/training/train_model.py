@@ -55,7 +55,8 @@ def train(args, use_comet : bool = True):
 
     print ('[INFO] Getting dataset...')
     data = data_cls()
-    (x_train, y_train), (x_test, y_test) = data.load_data()
+    data.load_data()
+    (x_train, y_train), (x_test, y_test) = (data.x_train, data.y_train), (data.x_test, data.y_test)
     classes = data.mapping
     
     #Used for testing only
@@ -92,7 +93,7 @@ def train(args, use_comet : bool = True):
     if use_comet and args['find_lr'] == False:
         #create an experiment with your api key
         experiment = Experiment(api_key='WVBNRAfMLCBWslJAAsffxM4Gz',
-                                project_name='emnist',
+                                project_name='emnist_lines',
                                 auto_param_logging=False)
         
         print ('[INFO] Starting Training...')

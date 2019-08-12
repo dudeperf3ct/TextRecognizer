@@ -58,15 +58,21 @@ class EMNISTLines(Dataset):
 
     def generate_data(self, split : str):
 
+        print('[INFO] Creating EmnistLines Dataset...')
         data = self.dataset
-        trn_dict = create_data_dict(data.x_train, data.y_train, self.mapping)
-        test_dict = create_data_dict(data.x_test, data.y_test, self.mapping)
+        classes = data.mapping
+        train_labels = get_labels(data.y_train, data.mapping)
+        test_labels = get_labels(data.y_train, data.mapping)
+        
+        trn_dict = create_data_dict(data.x_train, train_labels, self.mapping)
+        test_dict = create_data_dict(data.x_test, test_labels, self.mapping)
 
         num = self.num_train if split == 'train' else self.num_test
         data_dict = trn_dict if split == 'train' else test_dict
 
         sent = SentenceGenerator(self.max_length)
-        
+
+        print('[INFO] Saving EmnistLines Dataset to HDF5...')
         with h5py.File(self.data_filename, 'a') as f:
             x, y = create_image_string_dataset(num, data_dict, sent, self.max_overlap)
             y = convert_strings_to_categorical_labels(y, self.inverse_mapping)
@@ -102,7 +108,7 @@ def create_data_dict(samples, labels, mapping) -> dict :
     # create a dict where keys are labels and values are image array
     data_dict = defaultdict(list)
     for sample, label in zip(samples, labels.flatten()):
-        data_dict[mapping[label]].append(sample)
+        data_dict[label].append(sample)
     return data_dict
 
 def stitch_image_string(string : str, data_dict : dict, max_overlap : float) -> np.ndarray :
@@ -117,7 +123,7 @@ def stitch_image_string(string : str, data_dict : dict, max_overlap : float) -> 
         overlap = np.random.rand() * max_overlap
         N = len(selected_images)
         H, W = np.array(selected_images)[0].shape
-        print (N, overlap, H, W)
+        #print (N, overlap, H, W)
         next_overlap_width = W - int(overlap * W)
         concatenated_image = np.zeros((H, W * N), np.uint8)
         x = 0
@@ -141,8 +147,6 @@ def create_image_string_dataset(num, data_dict, sent, max_overlap):
                 pass
         images[n] = stitch_image_string(label, data_dict, max_overlap)
         labels.append(label)
-    print (num, len(images), len(labels))
-    print (labels)
     return images, labels
 
 
@@ -151,6 +155,9 @@ def convert_strings_to_categorical_labels(labels, mapping):
         to_categorical([mapping[c] for c in label], num_classes=len(mapping))
         for label in labels
     ])    
+
+def get_labels(labels, mapping):    
+    return np.array([mapping[np.where(labels[i]==1)[0][0]] for i in range(len(labels))])
 
 def augment_emnist_mapping(mapping):
     """Augment the mapping with extra symbols."""
