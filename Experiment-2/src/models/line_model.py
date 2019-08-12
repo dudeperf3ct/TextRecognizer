@@ -26,9 +26,10 @@ class LineModel(Model):
 
     def evaluate(self, dataset, batch_size=16, verbose=True):
         
+        iters_test = int(np.ceil(dataset['x_test'].shape[0] / float(batch_size)))
         test_gen = self.test_generator(dataset, batch_size)
-        preds_raw = self.network.predict_generator(test_gen)
-        trues = np.argmax(y, -1)
+        preds_raw = self.network.predict_generator(test_gen, steps=iters_test, verbose=2)
+        trues = np.argmax(dataset['y_test'], -1)
         preds = np.argmax(preds_raw, -1)
 
         pred_strings = [''.join(self.data.mapping.get(label, '') for label in pred).strip(' |_') for pred in preds]
