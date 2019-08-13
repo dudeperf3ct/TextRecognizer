@@ -7,7 +7,7 @@ from __future__ import print_function
 from typing import Tuple
 # import tensorflow as tf
 # from tensorflow.keras.layers import Conv2D, Dense, Dropout, Flatten, Lambda, GlobalAveragePooling2D, Input
-# from tensorflow.keras.layers import MaxPooling2D, ZeroPadding2D, Activation, BatchNormalization, Add
+# from tensorflow.keras.layers import MaxPooling2D, ZeroPadding2D, Activation, BatchNormalization, Add, Reshape
 # from tensorflow.keras.models import Sequential, Model
 import keras.backend as K
 from keras.layers import Conv2D, Dense, Dropout, Flatten, Lambda, GlobalAveragePooling2D, Input
@@ -153,7 +153,7 @@ def resnetcnn(input_shape : Tuple[int, ...],
     num_windows = int((new_width - new_window_width) / new_window_stride) + 1  #59
     
     # Input (4, 119, 64) -> Output (1, 59, 128)    
-    X = Conv2D(128, (new_height, new_window_width), strides=(1, new_window_stride), activation='relu')(x)
+    X = Conv2D(128, (new_height, new_window_width), strides=(1, new_window_stride), activation='relu')(X)
     # Input (1, 59, 128) -> Output (1, 59, 128)  
     X = Dropout(0.2)(X)
     

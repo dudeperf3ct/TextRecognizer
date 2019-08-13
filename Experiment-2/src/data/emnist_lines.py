@@ -62,7 +62,7 @@ class EMNISTLines(Dataset):
         data = self.dataset
         classes = data.mapping
         train_labels = get_labels(data.y_train, data.mapping)
-        test_labels = get_labels(data.y_train, data.mapping)
+        test_labels = get_labels(data.y_test, data.mapping)
         
         trn_dict = create_data_dict(data.x_train, train_labels, self.mapping)
         test_dict = create_data_dict(data.x_test, test_labels, self.mapping)
