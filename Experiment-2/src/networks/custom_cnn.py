@@ -23,7 +23,8 @@ def customcnn(input_shape : Tuple[int, ...],
     Args:
     input_shape : shape of the input tensor
     num_classes : number of classes
-
+    window_width : width of sliding window
+    window_stride : stride of sliding window
     Returns:
     CustomCNN Model
     """

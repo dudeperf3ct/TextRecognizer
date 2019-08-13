@@ -86,26 +86,27 @@ def resnetcnn(input_shape : Tuple[int, ...],
             output_shape : Tuple[int, ...],
             window_width: float = 16,
             window_stride: float = 8) -> Model:
-#     """Creates a resnet model 
-#     Stage-1
-#     INPUT => CONV => BN => RELU
+    """Creates a resnet model 
+    Stage-1
+    INPUT => CONV => BN => RELU
     
-#     Stage-2
-#     RESNET_BLOCK
+    Stage-2
+    RESNET_BLOCK
     
-#     Stage-3
-#     RESNET_BLOCK    
+    Stage-3
+    RESNET_BLOCK    
 
-#     Stage-4
-#     DROPOUT => Flatten => FC => RELU => DROPOUT => FC
+    Stage-4
+    DROPOUT => Flatten => FC => RELU => DROPOUT => FC
     
-#     Args:
-#     input_shape : shape of the input tensor
-#     num_classes : number of classes
-
-#     Returns:
-#     Resnet Model
-#     """
+    Args:
+    input_shape : shape of the input tensor
+    num_classes : number of classes
+    window_width : width of sliding window
+    window_stride : stride of sliding window
+    Returns:
+    Resnet Model
+    """
     image_height, image_width = input_shape    # 28, 952
     output_length, num_classes = output_shape  # 34, 64
 

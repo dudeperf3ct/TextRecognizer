@@ -22,7 +22,25 @@ def lenetcnnlstm(input_shape : Tuple[int, ...],
     Args:
     input_shape : shape of the input tensor
     output_shape : shape of the output tensor
-
+    window_width : width of sliding window
+    window_stride : stride of sliding window
     Returns:
     CNN LSTM Model
     """
+
+    image_height, image_width = input_shape    # 28, 952
+    output_length, num_classes = output_shape  # 34, 64
+    num_windows = int((image_width - window_width) / window_stride) + 1 #118
+
+    if num_windows < output_length:
+        raise ValueError(f'Window width/stride need to generate >= {output_length} windows (currently {num_windows})')
+
+    # Input (28, 952) -> Output (28, 952, 1)
+    image_input = Input(shape=input_shape)
+    image_reshaped = Reshape((image_height, image_width, 1))(image_input)
+
+    image_patches = Lambda(
+        slide_window,
+        arguments={'window_width': window_width, 'window_stride': window_stride}
+    )(image_reshaped)
+    # (118, 28, 16, 1)

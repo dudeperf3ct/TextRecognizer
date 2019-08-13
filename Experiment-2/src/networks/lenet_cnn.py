@@ -26,7 +26,8 @@ def lenetcnn(input_shape : Tuple[int, ...],
     Args:
     input_shape : shape of the input tensor
     output_shape : shape of the output tensor
-
+    window_width : width of sliding window
+    window_stride : stride of sliding window
     Returns:
     CNN Model
     """
@@ -95,21 +96,18 @@ def lenetcnnslide(input_shape : Tuple[int, ...],
     if num_windows < output_length:
         raise ValueError(f'Window width/stride need to generate >= {output_length} windows (currently {num_windows})')
 
+    model = Sequential()
     # Input (28, 952) -> Output (28, 952, 1)
-    image_reshaped = Reshape((image_height, image_width, 1))(image_input)
+    model.add(Reshape((image_height, image_width, 1), input_shape=input_shape))
 
-    image_patches = Lambda(
-        slide_window,
-        arguments={'window_width': window_width, 'window_stride': window_stride}
-    )(image_reshaped)
+    model.add(Lambda(slide_window, arguments={'window_width': window_width, 'window_stride': window_stride}))
     # (118, 28, 16, 1)
     
-    new_input_shape = image_patches.shape
-    # new_image_height = image_patches.shape[0]
-    # new_image_width = image_patches.shape[1]*image_patches[2]
-    model = Sequential()
+    new_image_height = num_windows
+    new_image_width = image_height*window_width
+
     # Input (118, 28, 16, 1) -> Output (118, 448, 1)
-    model.add(Reshape((num_windows, image_height*window_width, 1), input_shape=new_input_shape))
+    model.add(Reshape((new_image_height, new_image_width, 1)))
 
     #Input (118, 448, 1)  -> Output (116, 446, 32) 
     model.add(Conv2D(32, kernel_size=(3, 3), activation='relu'))
