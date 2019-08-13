@@ -145,77 +145,7 @@ def lenetcnnslide(input_shape : Tuple[int, ...],
     # Since we floor'd the calculation of width, we might have too many items in the sequence. Take only output_length.
     model.add(Lambda(lambda x: x[:, :output_length, :]))
     
-    model.summary()
     return model
-
-def dummy():
-    input_shape = (28, 952)
-    output_shape = (34, 64)
-    window_width = 16
-    window_stride = 8
-    image_height, image_width = input_shape    # 28, 952
-    output_length, num_classes = output_shape  # 34, 64
-    num_windows = int((image_width - window_width) / window_stride) + 1 #118
-
-    if num_windows < output_length:
-        raise ValueError(f'Window width/stride need to generate >= {output_length} windows (currently {num_windows})')
-
-    # Input (28, 952) -> Output (28, 952, 1)
-    image_input = Input(shape=input_shape)
-    image_reshaped = Reshape((image_height, image_width, 1))(image_input)
-    
-    new_image_height = num_windows
-    new_image_width = image_height*window_width
-    image_patches = Lambda(
-        slide_window,
-        arguments={'window_width': window_width, 'window_stride': window_stride}
-    )(image_reshaped)
-    # (118, 28, 16, 1)
-
-    model = Sequential()
-    # Input (118, 28, 16, 1) -> Output (118, 448, 1)
-    model.add(Reshape((num_windows, image_height*window_width, 1), input_shape=(num_windows, image_height, window_width, 1)))
-
-    #Input (118, 448, 1)  -> Output (116, 446, 32) 
-    model.add(Conv2D(32, kernel_size=(3, 3), activation='relu'))
-    #Input (116, 446, 32) -> Output (114, 444, 64)    
-    model.add(Conv2D(64, (3, 3), activation='relu'))
-    #Input (114, 444, 64) -> Output (57, 222, 64)    
-    model.add(MaxPooling2D(pool_size=(2, 2)))   
-    model.add(Dropout(0.5))
-
-    new_height = new_image_height // 2 - 2
-    new_width = new_image_width // 2 - 2
-    new_window_width = window_width // 2 - 2
-    new_window_stride = window_stride // 2
-    num_windows = int((new_width - new_window_width) / new_window_stride) + 1
-    
-    # Input (57, 222, 64) -> Output (1, 55, 128)    
-    model.add(Conv2D(128, (new_height, new_window_width), strides=(1, new_window_stride), activation='relu'))  
-    model.add(Dropout(0.2))
-    
-    # Input (1, 55, 128) -> Output (55, 128, 1)
-    model.add(Reshape((num_windows, 128, 1)))
-
-    width = int(num_windows / output_length)
-
-    # Input (55, 128, 1) -> Output (55, 1, 64)
-    model.add(Conv2D(num_classes, (width, 128), strides=(width, 1), activation='softmax'))
-
-    # Input (55, 1, 64) -> Output (55, 64)
-    model.add(Lambda(lambda x: K.squeeze(x, 2)))
-
-    # Input (55, 64) -> Output (output_length, 64)
-    # Since we floor'd the calculation of width, we might have too many items in the sequence. Take only output_length.
-    model.add(Lambda(lambda x: x[:, :output_length, :]))
-    
-    model.summary()
-    return model
-
-dummy()
-
-
-
 
 # def dummy():
 #     input_shape = (28, 952)

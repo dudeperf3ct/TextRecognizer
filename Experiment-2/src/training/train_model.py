@@ -15,7 +15,7 @@ from sklearn.model_selection import train_test_split
 from src.training.util import train_model
 from src.data.emnist_lines import EMNISTLines
 from src.models.line_model import LineModel
-from src.networks.lenet_cnn import lenetcnn
+from src.networks.lenet_cnn import lenetcnn, lenetcnnslide
 from src.networks.resnet_cnn import resnetcnn
 from src.networks.custom_cnn import customcnn
 
@@ -48,7 +48,7 @@ def _parse_args():
 
 
 funcs = {'EMNISTLines': EMNISTLines, 'lenetcnn': lenetcnn, 'resnetcnn': resnetcnn,
-        'customcnn': customcnn, 'LineModel': LineModel}
+        'customcnn': customcnn, 'LineModel': LineModel, 'lenetcnnslide': lenetcnnslide,}
 
 def train(args, use_comet : bool = True):
 
