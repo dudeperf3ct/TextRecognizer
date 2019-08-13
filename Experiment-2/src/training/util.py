@@ -63,7 +63,7 @@ def train_model(
     else:
         if EARLY_STOPPING:
             early_stopping = EarlyStopping(monitor='val_loss', min_delta=0.01, 
-                            patience=3, verbose=1, restore_best_weights=True)
+                            patience=5, verbose=1, restore_best_weights=True)
             callbacks.append(early_stopping)
 
         if CYCLIC_LR:

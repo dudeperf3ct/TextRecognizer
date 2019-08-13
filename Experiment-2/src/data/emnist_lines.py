@@ -60,7 +60,6 @@ class EMNISTLines(Dataset):
 
         print('[INFO] Creating EmnistLines Dataset...')
         data = self.dataset
-        classes = data.mapping
         train_labels = get_labels(data.y_train, data.mapping)
         test_labels = get_labels(data.y_test, data.mapping)
         
