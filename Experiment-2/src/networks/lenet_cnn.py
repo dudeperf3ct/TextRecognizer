@@ -13,7 +13,7 @@ from keras.layers import Conv2D, Dense, Dropout, Flatten, Lambda, MaxPooling2D, 
 from keras.models import Sequential, Model
 
 
-def cnn(input_shape : Tuple[int, ...], 
+def lenetcnn(input_shape : Tuple[int, ...], 
         output_shape : Tuple[int, ...],
         window_width: float = 16,
         window_stride: float = 8) -> Model:
@@ -27,8 +27,8 @@ def cnn(input_shape : Tuple[int, ...],
     CNN Model
     """
 
-    image_height, image_width = input_shape    # 28, 
-    output_length, num_classes = output_shape  # 34, 
+    image_height, image_width = input_shape    # 28, 952
+    output_length, num_classes = output_shape  # 34, 64
  
     model = Sequential()
     # Input (28, 952) -> Output (28, 952, 1)
@@ -64,7 +64,7 @@ def cnn(input_shape : Tuple[int, ...],
     # Input (39, 1, 64) -> Output (39, 64)
     model.add(Lambda(lambda x: K.squeeze(x, 2)))
 
-    # Input (39, 1, 64) -> Output (39, 64)
+    # Input (39, 1, 64) -> Output (output_length, 64)
     # Since we floor'd the calculation of width, we might have too many items in the sequence. Take only output_length.
     model.add(Lambda(lambda x: x[:, :output_length, :]))
 
@@ -75,8 +75,8 @@ def cnn(input_shape : Tuple[int, ...],
 #     output_shape = (34, 64)
 #     window_width = 16
 #     window_stride = 8
-#     image_height, image_width = input_shape    # 28, 
-#     output_length, num_classes = output_shape  # 34, 
+#     image_height, image_width = input_shape    # 28, 952
+#     output_length, num_classes = output_shape  # 34, 64
 
 #     model = Sequential()
 #     model.add(Reshape((image_height, image_width, 1), input_shape=input_shape))

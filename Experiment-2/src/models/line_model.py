@@ -12,14 +12,14 @@ from pathlib import Path
 from typing import Callable, Dict, Optional, Tuple
 from src.models.base_model import Model
 from src.data.emnist_lines import EMNISTLines
-from src.networks.cnn import cnn
+from src.networks.lenet_cnn import lenetcnn
 
 class LineModel(Model):
     """
     Character Model class
     """
     def __init__(self,
-                 network_fn : Callable = cnn,
+                 network_fn : Callable = lenetcnn,
                  dataset : type = EMNISTLines):
         """Define default network class and dataset class"""
         super().__init__(network_fn, dataset)      

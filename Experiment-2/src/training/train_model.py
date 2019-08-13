@@ -15,7 +15,10 @@ from sklearn.model_selection import train_test_split
 from src.training.util import train_model
 from src.data.emnist_lines import EMNISTLines
 from src.models.line_model import LineModel
-from src.networks.cnn import cnn
+from src.networks.lenet_cnn import lenetcnn
+from src.networks.resnet_cnn import resnetcnn
+from src.networks.custom_cnn import customcnn
+
 import argparse
 
 def _parse_args():
@@ -29,7 +32,7 @@ def _parse_args():
         help="whether or not model should be saved")
     parser.add_argument("-m", '--model', type=str, default="LineModel",
         help="which model to use")
-    parser.add_argument("-n", '--network', type=str, default="cnn",
+    parser.add_argument("-n", '--network', type=str, default="lenetcnn",
         help="which network architecture to use")
     parser.add_argument("-d", '--dataset', type=str, default="EMNISTLines",
         help="which dataset to use")
@@ -44,8 +47,8 @@ def _parse_args():
     return args
 
 
-funcs = {'EMNISTLines': EMNISTLines, 'cnn': cnn, 'LineModel': LineModel}
-
+funcs = {'EMNISTLines': EMNISTLines, 'lenetcnn': lenetcnn, 'resnetcnn': resnetcnn,
+        'customcnn': customcnn, 'LineModel': LineModel}
 
 def train(args, use_comet : bool = True):
 
