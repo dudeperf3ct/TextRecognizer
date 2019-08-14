@@ -44,3 +44,5 @@ def lenetcnnlstm(input_shape : Tuple[int, ...],
         arguments={'window_width': window_width, 'window_stride': window_stride}
     )(image_reshaped)
     # (118, 28, 16, 1)
+
+    
