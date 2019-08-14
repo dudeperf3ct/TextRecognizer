@@ -12,8 +12,8 @@ np.random.seed(42)
 
 from pathlib import Path
 from typing import Callable, Dict, Optional, Tuple
-from keras.optimizers import RMSprop
-#from tensorflow.keras.optimizers import RMSprop
+from keras.optimizers import RMSprop, Adam
+#from tensorflow.keras.optimizers import RMSprop, Adam
 
 WEIGHTS_DIR = Path(__file__).parents[2].resolve() / 'models'
 MODEL_DIR = Path(__file__).parents[2].resolve() / 'models'
@@ -127,7 +127,7 @@ class Model:
         return 'categorical_crossentropy'
 
     def optimizer(self, lr):
-        return RMSprop(lr)
+        return Adam(lr, amsgrad=True)
 
     def metrics(self):
         return ['accuracy']
