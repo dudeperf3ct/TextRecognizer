@@ -18,6 +18,7 @@ from src.models.line_model import LineModel
 from src.networks.lenet_cnn import lenetcnn, lenetcnnslide
 from src.networks.resnet_cnn import resnetcnn
 from src.networks.custom_cnn import customcnn
+from src.networks.cnn_lstm_ctc import cnnlstmctc
 
 import argparse
 
@@ -36,6 +37,12 @@ def _parse_args():
         help="which network architecture to use")
     parser.add_argument("-d", '--dataset', type=str, default="EMNISTLines",
         help="which dataset to use")
+    parser.add_argument("-backbone", '--backbone', type=str, default="lenet",
+        help="which backbone architecture to use (only for lstm ctc network)")
+    parser.add_argument("-seq", '--seq', type=str, default="lstm",
+        help="which sequence model to use (only for lstm ctc network)")
+    parser.add_argument("-bi", '--bi', type=bool, default=False,
+        help="whether to use bidirectional model (only for lstm ctc network)")
     parser.add_argument("-e", '--epochs', type=int, default=10,
         help="Number of epochs")
     parser.add_argument("-b", '--batch_size', type=int, default=32,
@@ -48,7 +55,8 @@ def _parse_args():
 
 
 funcs = {'EMNISTLines': EMNISTLines, 'lenetcnn': lenetcnn, 'resnetcnn': resnetcnn,
-        'customcnn': customcnn, 'LineModel': LineModel, 'lenetcnnslide': lenetcnnslide}
+        'customcnn': customcnn, 'LineModel': LineModel, 'lenetcnnslide': lenetcnnslide,
+        'lstmctc': cnnlstmctc}
 
 def train(args, use_comet : bool = True):
 
@@ -79,6 +87,11 @@ def train(args, use_comet : bool = True):
     print ('[INFO] Test shape: ', x_test.shape, y_test.shape)
 
     print ('[INFO] Setting up the model..')
+    if args['network'] == 'lstmctc' :
+        network = func(args['network'])(network=args['backbone'], 
+                                        seq_model=args['seq'], 
+                                        bi=args['bi'])
+        
     model = model_cls(network, data_cls)
     print (model)
     
@@ -112,7 +125,7 @@ def train(args, use_comet : bool = True):
         #will log metrics with the prefix 'test_'
         with experiment.test():  
             score = model.evaluate(dataset, int(args['batch_size']))
-            print(f'[INFO] Test evaluation: {score*100}')
+            print(f'[INFO] Test evaluation: {score*100}...')
             metrics = {
                 'accuracy':score
             }
@@ -145,7 +158,7 @@ def train(args, use_comet : bool = True):
             )
         print ('[INFO] Starting Testing...')    
         score = model.evaluate(dataset, args['batch_size'])
-        print(f'[INFO] Test evaluation: {score*100}')
+        print(f'[INFO] Test evaluation: {score*100}...')
 
     if args['weights']:
         model.save_weights()
