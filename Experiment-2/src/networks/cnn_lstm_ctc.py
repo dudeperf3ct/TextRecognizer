@@ -13,19 +13,20 @@ from src.networks.ctc import ctc_decode
 from src.networks.lenet import lenet
 from src.networks.resnet import resnet
 from src.networks.custom import customCNN
+from tensorflow.python.client import device_lib 
 # import tensorflow as tf
 # from tensorflow.keras.layers import Conv2D, Dense, Dropout, Flatten, Lambda, MaxPooling2D
 # from tensorflow.keras.models import Sequential, Model
 import tensorflow.keras.backend as K
 from keras.layers import Conv2D, Dense, Dropout, Flatten, Lambda, MaxPooling2D, Reshape
-from keras.layers import LSTM, CuDNNLSTM, GRU, Bidirectional, TimeDistributed
+from keras.layers import LSTM, CuDNNLSTM, GRU, Bidirectional, TimeDistributed, Input
 from keras.models import Sequential, Model
 
 def cnnlstmctc(input_shape : Tuple[int, ...],
                output_shape : Tuple[int, ...],
                window_width: float = 28,
                window_stride: float = 14,
-               network : str = 'lenet',
+               backbone : str = 'lenet',
                seq_model : str = "LSTM",
                bi : bool = False) -> Model:
     """
@@ -53,7 +54,7 @@ def cnnlstmctc(input_shape : Tuple[int, ...],
 
     # Input (28, 952) -> Output (28, 952, 1)
     image_input = Input(name='inputs', shape=input_shape, dtype='float32')
-    labels = Input(name='labels', shape=(output_length), dtype='float32')
+    labels = Input(name='labels', shape=(output_length,), dtype='float32')
     input_length = Input(name='input_length', shape=[1], dtype='int64')
     label_length = Input(name='label_length', shape=[1], dtype='int64')
     
@@ -68,7 +69,7 @@ def cnnlstmctc(input_shape : Tuple[int, ...],
 
     gpu_present = len(device_lib.list_local_devices()) > 2
     lstm_fn = CuDNNLSTM if gpu_present and func[seq_model] == "LSTM" else func[seq_model]
-    network_fn = func["network"]
+    network_fn = func["backbone"]
 
     # Any backbone model without the last two layers (softmax and dropout)
     convnet = network_fn((image_height, window_width, 1), (num_classes,))

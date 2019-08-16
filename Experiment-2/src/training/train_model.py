@@ -15,6 +15,7 @@ from sklearn.model_selection import train_test_split
 from src.training.util import train_model
 from src.data.emnist_lines import EMNISTLines
 from src.models.line_model import LineModel
+from src.models.line_model_ctc import LineModelCTC
 from src.networks.lenet_cnn import lenetcnn, lenetcnnslide
 from src.networks.resnet_cnn import resnetcnn
 from src.networks.custom_cnn import customcnn
@@ -87,7 +88,13 @@ def train(args, use_comet : bool = True):
     print ('[INFO] Test shape: ', x_test.shape, y_test.shape)
 
     print ('[INFO] Setting up the model..')
-    model = model_cls(network, data_cls)
+    if funcs['network'] == 'lstmctc':
+        model = model_cls(network, data_cls, {'backbone' : args['backbone'],
+                                              'seq_model' : args['seq'],
+                                              'bi' : args['bi']
+                                             })
+    else:
+        model = model_cls(network, data_cls)
     print (model)
     
     dataset = dict({
