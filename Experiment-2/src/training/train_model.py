@@ -89,8 +89,8 @@ def train(args, use_comet : bool = True):
 
     print ('[INFO] Setting up the model..')
     if args['network'] == 'lstmctc':
-        network_args = {'backbone' : args['bb'],
-                        'seq_model' : args['sq'],
+        network_args = {'backbone' : args['backbone'],
+                        'seq_model' : args['seq'],
                         'bi' : args['bi']
                         }
         model = model_cls(network, data_cls, network_args)

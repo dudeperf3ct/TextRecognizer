@@ -39,9 +39,6 @@ class Model:
             network_args = {}
         self.network = network_fn(self.data.input_shape, self.data.output_shape, **network_args)
 
-        self.batch_augment_fn: Optional[Callable] = None
-        self.batch_format_fn: Optional[Callable] = None
-
     @property
     def image_shape(self) -> Tuple[int, ...]:
         return self.data.input_shape
@@ -76,7 +73,11 @@ class Model:
                 tmp = dataset['x_train'][idx].astype('float32')
                 tmp -= np.mean(dataset['x_train'], axis=0, keepdims=True)
                 tmp /= 255.0
-                yield tmp, dataset['y_train'][idx]
+                if network_args is not None:
+                    x, y = format_batch_ctc(tmp, dataset['y_train'][idx])
+                else:
+                    x, y = tmp, dataset['y_train'][idx]
+                yield x, y                 
     
     def valid_generator(self, dataset, batch_size):
         num_iters = int(np.ceil(dataset['x_valid'].shape[0] / batch_size))
@@ -85,7 +86,11 @@ class Model:
                 tmp = dataset['x_valid'][i*batch_size:(i+1)*batch_size].astype('float32')
                 tmp -= np.mean(dataset['x_train'], axis=0, keepdims=True)
                 tmp /= 255.0
-                yield tmp, dataset['y_valid'][i*batch_size:(i+1)*batch_size]
+                if network_args is not None:
+                    x, y = format_batch_ctc(tmp, dataset['y_valid'][i*batch_size:(i+1)*batch_size])
+                else:
+                    x, y = tmp, dataset['y_valid'][i*batch_size:(i+1)*batch_size]
+                yield x, y 
 
     def fit(self, dataset, batch_size : int = 32, epochs : int = 10, callbacks : list = None, lr : float = 1e-3):
         if callbacks is None:
@@ -145,4 +150,35 @@ class Model:
 
     def save_model(self):
         self.network.save(self.model_filename)
-        print ('[INFO] Model saved at', self.model_filename)        
+        print ('[INFO] Model saved at', self.model_filename) 
+        
+        
+def format_batch_ctc(batch_x, batch_y):
+    """
+    Because CTC loss needs to be computed inside of the network, we include information about outputs in the inputs.
+    """
+    batch_size = batch_y.shape[0]
+    y_true = np.argmax(batch_y, axis=-1)
+
+    label_lengths = []
+    for ind in range(batch_size):
+        # Find all of the indices in the label that are blank
+        empty_at = np.where(batch_y[ind, :, -1] == 1)[0]
+        # Length of the label is the pos of the first blank, or the max length
+        if empty_at.shape[0] > 0:
+            label_lengths.append(empty_at[0])
+        else:
+            label_lengths.append(batch_y.shape[1])
+
+    batch_inputs = {
+        'image': batch_x,
+        'y_true': y_true,
+        'input_length': np.ones((batch_size, 1)),  # dummy, will be set to num_windows in network
+        'label_length': np.array(label_lengths)
+    }
+    batch_outputs = {
+        'ctc_loss': np.zeros(batch_size),  # dummy
+        'ctc_decoded': y_true
+    }
+
+    return batch_inputs, batch_outputs
