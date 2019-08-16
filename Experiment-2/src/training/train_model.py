@@ -56,7 +56,7 @@ def _parse_args():
 
 funcs = {'EMNISTLines': EMNISTLines, 'lenetcnn': lenetcnn, 'resnetcnn': resnetcnn,
         'customcnn': customcnn, 'LineModel': LineModel, 'lenetcnnslide': lenetcnnslide,
-        'lstmctc': cnnlstmctc}
+        'lstmctc': cnnlstmctc, 'LineModelCTC': LineModelCTC}
 
 def train(args, use_comet : bool = True):
 
@@ -87,11 +87,6 @@ def train(args, use_comet : bool = True):
     print ('[INFO] Test shape: ', x_test.shape, y_test.shape)
 
     print ('[INFO] Setting up the model..')
-    if args['network'] == 'lstmctc' :
-        network = func(args['network'])(network=args['backbone'], 
-                                        seq_model=args['seq'], 
-                                        bi=args['bi'])
-        
     model = model_cls(network, data_cls)
     print (model)
     

@@ -5,13 +5,14 @@ from __future__ import division
 from __future__ import print_function
 
 from typing import Tuple
+from pathlib import Path
 import sys
 sys.path.append(str(Path(__file__).resolve().parents[2]))
 from src.networks.sliding import slide_window
 from src.networks.ctc import ctc_decode
 from src.networks.lenet import lenet
 from src.networks.resnet import resnet
-from src.network.custom import customCNN
+from src.networks.custom import customCNN
 # import tensorflow as tf
 # from tensorflow.keras.layers import Conv2D, Dense, Dropout, Flatten, Lambda, MaxPooling2D
 # from tensorflow.keras.models import Sequential, Model
@@ -69,7 +70,7 @@ def cnnlstmctc(input_shape : Tuple[int, ...],
     lstm_fn = CuDNNLSTM if gpu_present and func[seq_model] == "LSTM" else func[seq_model]
     network_fn = func["network"]
 
-    # A LeNet model without the last two layers (softmax and dropout)
+    # Any backbone model without the last two layers (softmax and dropout)
     convnet = network_fn((image_height, window_width, 1), (num_classes,))
     convnet = Model(inputs=convnet.inputs, outputs=convnet.layers[-2].output)
     convnet_outputs = TimeDistributed(convnet)(image_patches)

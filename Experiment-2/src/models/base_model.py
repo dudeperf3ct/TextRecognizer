@@ -25,15 +25,19 @@ class Model:
     """
     def __init__(self,
                  network_fn : Callable,
-                 dataset : type):
+                 dataset : type,
+                 network_args : Dict = None):
         """
         Args:
         Network_fn -> Type of network class
         dataset -> Type of dataset class
+        network_args -> Arguments to pass to network
         """
         self.name = f'{self.__class__.__name__}_{dataset.__name__}_{network_fn.__name__}'
         self.data = dataset()
-        self.network = network_fn(self.data.input_shape, self.data.output_shape)
+        if network_args is None:
+            network_args = {}
+        self.network = network_fn(self.data.input_shape, self.data.output_shape, **network_args)
 
         self.batch_augment_fn: Optional[Callable] = None
         self.batch_format_fn: Optional[Callable] = None
