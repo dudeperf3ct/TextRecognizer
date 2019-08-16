@@ -88,11 +88,12 @@ def train(args, use_comet : bool = True):
     print ('[INFO] Test shape: ', x_test.shape, y_test.shape)
 
     print ('[INFO] Setting up the model..')
-    if funcs['network'] == 'lstmctc':
-        model = model_cls(network, data_cls, {'backbone' : args['backbone'],
-                                              'seq_model' : args['seq'],
-                                              'bi' : args['bi']
-                                             })
+    if args['network'] == 'lstmctc':
+        network_args = {'backbone' : args['backbone'],
+                        'seq_model' : args['seq'],
+                        'bi' : args['bi']
+                        }
+        model = model_cls(network, data_cls, network_args)
     else:
         model = model_cls(network, data_cls)
     print (model)

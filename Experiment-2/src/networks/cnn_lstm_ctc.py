@@ -27,7 +27,7 @@ def cnnlstmctc(input_shape : Tuple[int, ...],
                window_width: float = 28,
                window_stride: float = 14,
                backbone : str = 'lenet',
-               seq_model : str = "LSTM",
+               seq_model : str = 'lstm',
                bi : bool = False) -> Model:
     """
     Creates a cnn lstm model 
@@ -65,11 +65,11 @@ def cnnlstmctc(input_shape : Tuple[int, ...],
     )(image_reshaped)
     # (118, 28, 16, 1)
     
-    func = {"LSTM" : LSTM, "GRU" : GRU, "lenet" : lenet, "resnet" : resnet, "custom" : customCNN}
+    func = {"lstm" : LSTM, "gru" : GRU, "lenet" : lenet, "resnet" : resnet, "custom" : customCNN}
 
     gpu_present = len(device_lib.list_local_devices()) > 2
-    lstm_fn = CuDNNLSTM if gpu_present and func[seq_model] == "LSTM" else func[seq_model]
-    network_fn = func["backbone"]
+    lstm_fn = CuDNNLSTM if gpu_present and seq_model == "lstm" else func[seq_model]
+    network_fn = func[backbone]
 
     # Any backbone model without the last two layers (softmax and dropout)
     convnet = network_fn((image_height, window_width, 1), (num_classes,))
@@ -94,7 +94,7 @@ def cnnlstmctc(input_shape : Tuple[int, ...],
     ctc_loss_output = Lambda(
         lambda x: K.ctc_batch_cost(x[0], x[1], x[2], x[3]),
         name='ctc_loss'
-    )([y_true, softmax_output, input_length_processed, label_length])
+    )([labels, softmax_output, input_length_processed, label_length])
 
     ctc_decoded_output = Lambda(
         lambda x: ctc_decode(x[0], x[1], output_length),
@@ -102,7 +102,7 @@ def cnnlstmctc(input_shape : Tuple[int, ...],
     )([softmax_output, input_length_processed])
 
     model = Model(
-        inputs=[image_input, y_true, input_length, label_length],
+        inputs=[image_input, labels, input_length, label_length],
         outputs=[ctc_loss_output, ctc_decoded_output]
     )
 
