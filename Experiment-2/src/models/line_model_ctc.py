@@ -41,7 +41,6 @@ class LineModelCTC(Model):
         preds = decoding_model.predict_generator(test_gen, steps=iters_test, verbose=2)
         
         trues = np.argmax(dataset['y_test'], -1)
-        preds = np.argmax(preds_raw, -1)
 
         pred_strings = [''.join(self.data.mapping.get(label, '') for label in pred).strip(' |_') for pred in preds]
         true_strings = [''.join(self.data.mapping.get(label, '') for label in true).strip(' |_') for true in trues]
@@ -139,5 +138,5 @@ def format_batch_ctc(batch_x, batch_y):
         'ctc_loss': np.zeros(batch_size),  # dummy
         'ctc_decoded': y_true
     }
-    
+
     return batch_inputs, batch_outputs

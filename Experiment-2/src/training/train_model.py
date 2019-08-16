@@ -32,15 +32,15 @@ def _parse_args():
         help="whether or not weights should be saved")
     parser.add_argument("-save_model", "--save_model", type=str, default=False,
         help="whether or not model should be saved")
-    parser.add_argument("-m", '--model', type=str, default="LineModel",
+    parser.add_argument("-m", '--model', type=str, default='LineModel',
         help="which model to use")
-    parser.add_argument("-n", '--network', type=str, default="lenetcnn",
+    parser.add_argument("-n", '--network', type=str, default='lenetcnn',
         help="which network architecture to use")
-    parser.add_argument("-d", '--dataset', type=str, default="EMNISTLines",
+    parser.add_argument("-d", '--dataset', type=str, default='EMNISTLines',
         help="which dataset to use")
-    parser.add_argument("-backbone", '--backbone', type=str, default="lenet",
+    parser.add_argument("-bb", '--backbone', type=str, default='lenet',
         help="which backbone architecture to use (only for lstm ctc network)")
-    parser.add_argument("-seq", '--seq', type=str, default="lstm",
+    parser.add_argument("-sq", '--seq', type=str, default="lstm",
         help="which sequence model to use (only for lstm ctc network)")
     parser.add_argument("-bi", '--bi', type=bool, default=False,
         help="whether to use bidirectional model (only for lstm ctc network)")
@@ -89,8 +89,8 @@ def train(args, use_comet : bool = True):
 
     print ('[INFO] Setting up the model..')
     if args['network'] == 'lstmctc':
-        network_args = {'backbone' : args['backbone'],
-                        'seq_model' : args['seq'],
+        network_args = {'backbone' : args['bb'],
+                        'seq_model' : args['sq'],
                         'bi' : args['bi']
                         }
         model = model_cls(network, data_cls, network_args)
