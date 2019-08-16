@@ -31,11 +31,12 @@ class LineModelCTC(Model):
             network_args = {}
         network_args = {**default_network_args, **network_args}
         super().__init__(network_fn, dataset, network_args) 
+        self.batch_format_fn = format_batch_ctc
 
     def evaluate(self, dataset, batch_size=16, verbose=True):
         
         iters_test = int(np.ceil(dataset['x_test'].shape[0] / float(batch_size)))
-        test_gen = test_generator(dataset, batch_size)
+        test_gen = self.test_generator(dataset, batch_size)
 
         # We can use the `ctc_decoded` layer that is part of our model here.
         decoding_model = KerasModel(inputs=self.network.input, outputs=self.network.get_layer('ctc_decoded').output)
@@ -101,16 +102,6 @@ class LineModelCTC(Model):
     def metrics(self):
         """We could probably pass in a custom character accuracy metric for 'ctc_decoded' output here."""
         return None
-
-def test_generator(self, dataset, batch_size : int):
-    num_iters = int(np.ceil(dataset['x_test'].shape[0] / batch_size))
-    while 1:
-        for i in range(num_iters):
-            tmp = dataset['x_test'][i*batch_size:(i+1)*batch_size].astype('float32')
-            tmp /= 255.0
-            x, y = format_batch_ctc(tmp, dataset['y_test'][i*batch_size:(i+1)*batch_size])
-            yield x, y
-
 
 def format_batch_ctc(batch_x, batch_y):
     """
