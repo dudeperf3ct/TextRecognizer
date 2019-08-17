@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Callable, Dict, Optional, Tuple
 from src.models.base_model import Model
 import tensorflow.keras.backend as K
-from tensorflow.keras.models import Model as KerasModel
+from keras.models import Model as KerasModel
 from src.data.emnist_lines import EMNISTLines
 from src.networks.cnn_lstm_ctc import cnnlstmctc
 
@@ -30,7 +30,7 @@ class LineModelCTC(Model):
         if network_args is None:
             network_args = {}
         network_args = {**default_network_args, **network_args}
-        print (network_args)
+        print ('[INFO] Arguments passed to network...'network_args)
         super().__init__(network_fn, dataset, network_args) 
         self.batch_format_fn = format_batch_ctc
 
@@ -54,22 +54,21 @@ class LineModelCTC(Model):
             for pred_string, true_string in zip(pred_strings, true_strings)
         ]
         mean_accuracy = np.mean(char_accuracies)
-        
-        if verbose:
-            sorted_ind = np.argsort(char_accuracies)
-            print("\nLeast accurate predictions:")
-            for ind in sorted_ind[:5]:
-                print(f'True: {true_strings[ind]}')
-                print(f'Pred: {pred_strings[ind]}')
-            print("\nMost accurate predictions:")
-            for ind in sorted_ind[-5:]:
-                print(f'True: {true_strings[ind]}')
-                print(f'Pred: {pred_strings[ind]}')
-            print("\nRandom predictions:")
-            random_ind = np.random.randint(0, len(char_accuracies), 5)
-            for ind in random_ind:
-                print(f'True: {true_strings[ind]}')
-                print(f'Pred: {pred_strings[ind]}')
+
+        sorted_ind = np.argsort(char_accuracies)
+        print("\nLeast accurate predictions:")
+        for ind in sorted_ind[:5]:
+            print(f'True: {true_strings[ind]}')
+            print(f'Pred: {pred_strings[ind]}')
+        print("\nMost accurate predictions:")
+        for ind in sorted_ind[-5:]:
+            print(f'True: {true_strings[ind]}')
+            print(f'Pred: {pred_strings[ind]}')
+        print("\nRandom predictions:")
+        random_ind = np.random.randint(0, len(char_accuracies), 5)
+        for ind in random_ind:
+            print(f'True: {true_strings[ind]}')
+            print(f'Pred: {pred_strings[ind]}')
 
         return mean_accuracy        
     
