@@ -30,7 +30,7 @@ class LineModelCTC(Model):
         if network_args is None:
             network_args = {}
         network_args = {**default_network_args, **network_args}
-        print ('[INFO] Arguments passed to network...'network_args)
+        print ('[INFO] Arguments passed to network...', network_args)
         super().__init__(network_fn, dataset, network_args) 
         self.batch_format_fn = format_batch_ctc
 

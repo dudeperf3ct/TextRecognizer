@@ -46,7 +46,9 @@ def customCNN(input_shape : Tuple[int, ...], output_shape : Tuple[int, ...]) -> 
     model.add(Flatten())
     model.add(BatchNormalization())
     #Input (1024,)  -> Output (128,)
-    model.add(Dense(128))
-    model.add(ReLU())
-
+    model.add(Dense(128, activation='relu'))
+    model.add(Dropout(0.2))
+    #Input (128,)  -> Output (num_classes,)
+    model.add(Dense(num_classes, activation='softmax'))
+    
     return model

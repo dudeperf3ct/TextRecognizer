@@ -108,7 +108,9 @@ def resnet(input_shape : Tuple[int, ...], output_shape : Tuple[int, ...]) -> Mod
     X_input = Input(input_shape)
     if len(input_shape) < 3:
         X = Lambda(lambda x: K.expand_dims(x, -1), input_shape=(input_shape[0], input_shape[1]))(X_input) 
-    # Stage 1
+    else: 
+        X = X_input 
+        # Stage 1
     X = ZeroPadding2D((2, 2))(X)
     X = Conv2D(64, (3, 3), strides=(1, 1), padding='same', name='conv1')(X)
     X = BatchNormalization(axis=3, name='bn_conv1')(X)
@@ -143,6 +145,10 @@ def resnet(input_shape : Tuple[int, ...], output_shape : Tuple[int, ...]) -> Mod
     X = GlobalAveragePooling2D()(X)
     #Input (512,)       -> Output (128,)
     X = Dense(128, activation='relu')(X)
+    #Input (128,)       -> Output (128,)
+    X = Dropout(0.2)(X)
+    #Input (128,)       -> Output (num_classes,)
+    X = Dense(num_classes, activation='softmax')(X)
 
     model = Model(inputs=X_input, outputs=X)
 

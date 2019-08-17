@@ -40,5 +40,9 @@ def lenet(input_shape : Tuple[int, ...], output_shape : Tuple[int, ...]) -> Mode
     model.add(Flatten())
     #Input (12*12*64,)  -> Output (128,)
     model.add(Dense(128, activation='relu'))
+    #Input (128,)       -> Output (128,)
+    model.add(Dropout(0.5))
+    #Input (128,)       -> Output (num_classes,)
+    model.add(Dense(num_classes, activation='softmax'))
 
     return model
