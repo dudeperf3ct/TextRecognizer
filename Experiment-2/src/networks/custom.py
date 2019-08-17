@@ -30,7 +30,7 @@ def customCNN(input_shape : Tuple[int, ...], output_shape : Tuple[int, ...]) -> 
         model.add(Lambda(lambda x: K.expand_dims(x, -1), input_shape=input_shape))
         input_shape = (input_shape[0], input_shape[1], 1)
     #Input (28, 28, 1)  -> Output (13, 13, 32)
-    model.add(Conv2D(32, (3,3)))
+    model.add(Conv2D(32, (3,3), input_shape=input_shape))
     model.add(ReLU())
     model.add(BatchNormalization())
     model.add(MaxPooling2D())

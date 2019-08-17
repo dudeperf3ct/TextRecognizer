@@ -20,7 +20,7 @@ from tensorflow.python.client import device_lib
 import tensorflow.keras.backend as K
 from keras.layers import Conv2D, Dense, Dropout, Flatten, Lambda, MaxPooling2D, Reshape
 from keras.layers import LSTM, CuDNNLSTM, GRU, Bidirectional, TimeDistributed, Input
-from keras.models import Sequential, Model
+from keras.models import Model
 
 def cnnlstmctc(input_shape : Tuple[int, ...],
                output_shape : Tuple[int, ...],

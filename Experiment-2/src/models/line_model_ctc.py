@@ -26,7 +26,7 @@ class LineModelCTC(Model):
                  network_args : Dict = None):
         """Model for recognizing handwritten text in an image of a line, using CTC loss/decoding."""
 
-        default_network_args = {'backbone' : 'lenet', 'seq_model' : 'lstm', 'bi' : False}
+        default_network_args = {}
         if network_args is None:
             network_args = {}
         network_args = {**default_network_args, **network_args}
