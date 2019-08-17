@@ -69,6 +69,8 @@ def cnnlstmctc(input_shape : Tuple[int, ...],
 
     gpu_present = len(device_lib.list_local_devices()) > 2
     lstm_fn = CuDNNLSTM if gpu_present and seq_model == "lstm" else func[seq_model]
+    lstm_fn = CuDNNGRU if gpu_present and seq_model == "gru" else func[seq_model]
+
     network_fn = func[backbone]
 
     # Any backbone model without the last two layers (softmax and dropout)

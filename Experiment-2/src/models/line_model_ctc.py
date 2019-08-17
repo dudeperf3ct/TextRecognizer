@@ -26,20 +26,22 @@ class LineModelCTC(Model):
                  network_args : Dict = None):
         """Model for recognizing handwritten text in an image of a line, using CTC loss/decoding."""
 
-        default_network_args = {'backbone': 'lenet', 'seq_model': 'lstm', 'bi':False}
+        default_network_args = {'backbone' : 'lenet', 'seq_model' : 'lstm', 'bi' : False}
         if network_args is None:
             network_args = {}
         network_args = {**default_network_args, **network_args}
+        print (network_args)
         super().__init__(network_fn, dataset, network_args) 
         self.batch_format_fn = format_batch_ctc
 
-    def evaluate(self, dataset, batch_size=16, verbose=True):
+    def evaluate(self, dataset, batch_size : int = 16) -> float:
         
         iters_test = int(np.ceil(dataset['x_test'].shape[0] / float(batch_size)))
         test_gen = self.test_generator(dataset, batch_size)
 
         # We can use the `ctc_decoded` layer that is part of our model here.
-        decoding_model = KerasModel(inputs=self.network.input, outputs=self.network.get_layer('ctc_decoded').output)
+        decoding_model = KerasModel(inputs=self.network.input, 
+                                    outputs=self.network.get_layer('ctc_decoded').output)
         preds = decoding_model.predict_generator(test_gen, steps=iters_test, verbose=2)
         
         trues = np.argmax(dataset['y_test'], -1)
@@ -73,6 +75,7 @@ class LineModelCTC(Model):
     
     
     def predict_on_image(self, image: np.ndarray) -> Tuple[str, float]:
+
         softmax_output_fn = K.function(
             [self.network.get_layer('inputs').input, K.learning_phase()],
             [self.network.get_layer('softmax_output').output]
@@ -121,8 +124,8 @@ def format_batch_ctc(batch_x, batch_y):
             label_lengths.append(batch_y.shape[1])
 
     batch_inputs = {
-        'image': batch_x,
-        'y_true': y_true,
+        'inputs': batch_x,
+        'labels': y_true,
         'input_length': np.ones((batch_size, 1)),  # dummy, will be set to num_windows in network
         'label_length': np.array(label_lengths)
     }
