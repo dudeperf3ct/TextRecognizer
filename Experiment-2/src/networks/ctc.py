@@ -7,19 +7,22 @@ from tensorflow.python.ops import ctc_ops  # pylint: disable=no-name-in-module
 def ctc_decode(y_pred, input_length, max_output_length):
     """
     Cut down from https://github.com/keras-team/keras/blob/master/keras/backend/tensorflow_backend.py#L4170
+
     Decodes the output of a softmax.
     Uses greedy (best path) search.
+
     # Arguments
         y_pred: tensor `(samples, time_steps, num_categories)`
             containing the prediction, or output of the softmax.
         input_length: tensor `(samples, )` containing the sequence length for
             each batch item in `y_pred`.
         max_output_length: int giving the max output sequence length
+
     # Returns
         List: list of one element that contains the decoded sequence.
     """
     y_pred = tf.math.log(tf.transpose(y_pred, perm=[1, 0, 2]) + K.epsilon())
-    input_length = tf.to_int32((tf.squeeze(input_length, axis=-1)))
+    input_length = tf.cast((tf.squeeze(input_length, axis=-1)), tf.int32)
 
     (decoded, _) = ctc_ops.ctc_greedy_decoder(inputs=y_pred, sequence_length=input_length)
 
