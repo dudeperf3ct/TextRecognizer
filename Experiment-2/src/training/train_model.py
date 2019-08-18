@@ -14,6 +14,7 @@ sys.path.append(str(Path(__file__).resolve().parents[2]))
 from sklearn.model_selection import train_test_split
 from src.training.util import train_model
 from src.data.emnist_lines import EMNISTLines
+from src.data.iam_lines import IAMLines
 from src.models.line_model import LineModel
 from src.models.line_model_ctc import LineModelCTC
 from src.networks.lenet_cnn import lenetcnn, lenetcnnslide
@@ -55,7 +56,7 @@ def _parse_args():
     return args
 
 
-funcs = {'EMNISTLines': EMNISTLines, 'lenetcnn': lenetcnn, 'resnetcnn': resnetcnn,
+funcs = {'EMNISTLines': EMNISTLines, 'IAMLines': IAMLines, 'lenetcnn': lenetcnn, 'resnetcnn': resnetcnn,
         'customcnn': customcnn, 'LineModel': LineModel, 'lenetcnnslide': lenetcnnslide,
         'lstmctc': cnnlstmctc, 'LineModelCTC': LineModelCTC}
 
