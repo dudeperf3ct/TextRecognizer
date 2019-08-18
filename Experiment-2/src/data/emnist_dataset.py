@@ -1,5 +1,5 @@
 """
-EMNIST dataset. Downloads from NIST website and saves as .npz file if not already present.
+EMNIST dataset. Downloads from NIST website and saves as .h5 file if not already present.
 """
 
 from __future__ import absolute_import

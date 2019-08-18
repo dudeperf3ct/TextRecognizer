@@ -1,5 +1,5 @@
 """
-EMNIST dataset. Downloads from NIST website and saves as .npz file if not already present.
+EMNIST Lines dataset. Uses EMNIST dataset to create EMNIST Lines dataset.
 """
 
 from __future__ import absolute_import
