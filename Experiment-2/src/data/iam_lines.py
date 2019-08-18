@@ -99,7 +99,7 @@ class IAMLines(Dataset):
             f'Input shape: {self.input_shape}\n'
         )  
 
-def _augment_emnist_mapping(mapping):
+def augment_emnist_mapping(mapping):
     """Augment the mapping with extra symbols."""
     # Extra symbols in IAM dataset
     extra_symbols = [' ', '!', '"', '#', '&', "'", '(', ')', '*', '+', ',', '-', '.', '/', ':', ';', '?']
