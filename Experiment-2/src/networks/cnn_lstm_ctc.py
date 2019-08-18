@@ -25,7 +25,7 @@ from keras.models import Model
 def cnnlstmctc(input_shape : Tuple[int, ...],
                output_shape : Tuple[int, ...],
                window_width: float = 28,
-               window_stride: float = 14,
+               window_stride: float = 7,
                backbone : str = 'lenet',
                seq_model : str = 'lstm',
                bi : bool = False) -> Model:

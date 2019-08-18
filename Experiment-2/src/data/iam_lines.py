@@ -27,6 +27,7 @@ root_folder = Path(__file__).resolve().parents[2]/'data'
 raw_folder = root_folder/'raw'
 processed_folder = root_folder/'processed'
 url = 'https://s3-us-west-2.amazonaws.com/fsdl-public-assets/iam_lines.h5'
+filename = root_folder/'processed'/'iam_lines.h5'
 
 
 class IAMLines(Dataset):
@@ -118,7 +119,7 @@ def main():
     """Load IAM Lines dataset and print INFO."""
 
     dataset = IAMLines()
-    (x_train, y_train), (x_test, y_test)= dataset.load_data()
+    (x_train, y_train), (x_test, y_test) = dataset.load_data()
 
     print(dataset)
     print('Training shape:', x_train.shape, y_train.shape)
