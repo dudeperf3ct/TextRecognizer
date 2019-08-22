@@ -1,3 +1,4 @@
+%%writefile ../src/paragraph_text_recognizer.py
 """
 Takes an image and returns all the text in it, by first segmenting the image with LineDetector, then extracting crops
 of the image corresponding to the line regions, and running each line region crop through LinePredictor.
@@ -11,19 +12,24 @@ from typing import List, Tuple, Union
 import cv2
 import numpy as np
 import imageio
+import imutils
 from pathlib import Path
 import sys
+import matplotlib.pyplot as plt
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 from src.data.iam_lines import IAMLines
 from src.models.line_detect_model import LineDetectModel
 from src.models.line_model_ctc import LineModelCTC
+import keras
+import tensorflow as tf
 
 class ParagraphTextRecognizer:
     """Given an image of a single handwritten character, recognizes it."""
     def __init__(self):
         self.line_detector_model = LineDetectModel()
         self.line_detector_model.load_weights()
-        self.line_predictor_model = LineModelCTC(dataset=IAMLines)
+        args = {'backbone' : 'lenet', 'seq_model' : 'lstm', 'bi' : True}
+        self.line_predictor_model = LineModelCTC(dataset=IAMLines, network_args=args)
         self.line_predictor_model.load_weights()
 
     def predict(self, image_or_filename: Union[np.ndarray, str]):
@@ -36,7 +42,7 @@ class ParagraphTextRecognizer:
             image = image_or_filename
 
         line_region_crops = self.get_line_region_crops(image=image)
-        print([a.shape for a in line_region_crops])
+        #print([a.shape for a in line_region_crops])
         prepared_line_region_crops = [
             self.prepare_image_for_line_predictor_model(image=crop)
             for crop in line_region_crops
@@ -51,7 +57,13 @@ class ParagraphTextRecognizer:
     def get_line_region_crops(self, image: np.ndarray, min_crop_len_factor: float = 0.02) -> List[np.ndarray]:
         """Find all the line regions in square image and crop them out and return them."""
         prepared_image, scale_down_factor = self.prepare_image_for_line_detector_model(image)
+        # print ('[INFO] Cropped image...')        
+        # plt.imshow(prepared_image)
+        # plt.show()
         line_segmentation = self.line_detector_model.predict_on_image(prepared_image)
+        # print ('[INFO] Segmented image...')        
+        # plt.imshow(line_segmentation.argmax(-1), cmap='gray')
+        # plt.show()
         bounding_boxes_xywh = find_line_bounding_boxes(line_segmentation)
 
         bounding_boxes_xywh = (bounding_boxes_xywh * scale_down_factor).astype(int)
@@ -94,12 +106,15 @@ def find_line_bounding_boxes(line_segmentation: np.ndarray):
         line_activation_image = cv2.dilate(line_segmentation_channel, kernel=np.ones((3, 3)), iterations=1)
         line_activation_image = (line_activation_image * 255).astype('uint8')
         line_activation_image = cv2.threshold(line_activation_image, 0.5, 1, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
-
-        bounding_cnts, _ = cv2.findContours(line_activation_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        # print ('[INFO] Thresholed image...')
+        # plt.imshow(line_activation_image, cmap='gray')
+        # plt.show()
+        bounding_cnts = cv2.findContours(line_activation_image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        bounding_cnts = imutils.grab_contours(bounding_cnts)
         return np.array([cv2.boundingRect(cnt) for cnt in bounding_cnts])
 
     bboxes_xywh = np.concatenate([
-        _find_line_bounding_boxes_in_channel(line_segmentation[:, :, i])
+        find_line_bounding_boxes_in_channel(line_segmentation[:, :, i])
         for i in [1, 2]
     ], axis=0)
     return bboxes_xywh[np.argsort(bboxes_xywh[:, 1])]

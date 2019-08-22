@@ -16,6 +16,8 @@ from keras.models import Model as KerasModel
 from src.data.emnist_lines import EMNISTLines
 from src.data.iam_lines import IAMLines
 from src.networks.cnn_lstm_ctc import cnnlstmctc
+import tensorflow as tf
+K.get_session().run(tf.global_variables_initializer())
 
 class LineModelCTC(Model):
 
