@@ -1,4 +1,3 @@
-%%writefile ../src/paragraph_text_recognizer.py
 """
 Takes an image and returns all the text in it, by first segmenting the image with LineDetector, then extracting crops
 of the image corresponding to the line regions, and running each line region crop through LinePredictor.
