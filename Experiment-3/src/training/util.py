@@ -58,7 +58,6 @@ def train_model(
         # epochs
         print("[INFO] learning rate finder complete")
         print("[INFO] examine plot and adjust learning rates before training")
-        sys.exit(0)
 
     else:
         if EARLY_STOPPING:
@@ -83,6 +82,7 @@ def train_model(
         print('[INFO] Training took {:2f} s'.format(time.time() - t))
 
         save_model(model.network, name)
+        
         plot_loss(_history, name)
         plot_acc(_history, name)
 
