@@ -1,24 +1,19 @@
-"""CharacterPredictor class"""
+"""LinePredictor class"""
 from typing import Tuple, Union
 
 import numpy as np
-from pathlib import Path
-import sys
-sys.path.append(str(Path(__file__).resolve().parents[2]))
-
-from src.models.character_model import Character_Model
-from src.networks.lenet import lenet
-from src.networks.resnet import resnet
-from src.networks.custom import customCNN
+from text_recognizer.models import LineModelCtc
+from text_recognizer.emnist_lines import EMNISTLines
+from text_recognizer.iam_lines import IAMLines
 import imageio
 import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 
-class CharacterPredictor:
-    """Given an image of a single handwritten character, recognizes it."""
-    def __init__(self):
-        self.model = Character_Model(customCNN)
+class LinePredictor:
+    """Given an image of a line of handwritten text, recognizes text contents."""
+    def __init__(self, dataset_cls=EMNISTLines):
+        self.model = LineModelCtc(dataset_cls=dataset_cls)
         self.model.load_weights()
 
     def predict(self, image_or_filename: Union[np.ndarray, str]) -> Tuple[str, float]:
