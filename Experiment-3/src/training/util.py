@@ -87,6 +87,3 @@ def train_model(
         plot_acc(_history, name)
 
         return model
-
-
-

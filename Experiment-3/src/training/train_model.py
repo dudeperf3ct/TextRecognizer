@@ -60,7 +60,7 @@ def train(args, use_comet : bool = True):
     data_cls = funcs[args['dataset']]
     model_cls = funcs[args['model']]
     network = funcs[args['network']]
-
+    
     print ('[INFO] Getting dataset...')
     data = data_cls()
     data.load_data()
@@ -91,8 +91,7 @@ def train(args, use_comet : bool = True):
         model = model_cls(network, data_cls, network_args)
     else:
         model = model_cls(network, data_cls)
-    print (model)
-    
+
     dataset = dict({
         'x_train' : x_train,
         'y_train' : y_train,
