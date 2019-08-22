@@ -141,8 +141,8 @@ class Model:
     def evaluate(self, dataset, batch_size : int = 16):
         t_generator = self.test_generator(dataset, batch_size=batch_size)
         iters_test = int(np.ceil(dataset['x_test'].shape[0] / float(batch_size)))
-        loss, accuracy = self.network.evaluate_generator(t_generator, steps=iters_test, verbose=2)
-        return loss, accuracy
+        loss = self.network.evaluate_generator(t_generator, steps=iters_test, verbose=2)
+        return loss
 
     def loss(self):
         return 'categorical_crossentropy'

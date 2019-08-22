@@ -121,10 +121,10 @@ def train(args, use_comet : bool = True):
         print ('[INFO] Starting Testing...')    
         #will log metrics with the prefix 'test_'
         with experiment.test():  
-            score = model.evaluate(dataset, int(args['batch_size']))
-            print(f'[INFO] Test evaluation: {score*100}...')
+            loss = model.evaluate(dataset, int(args['batch_size']))
+            print(f'[INFO] Test loss: {loss}...')
             metrics = {
-                'accuracy':score
+                'test_loss':loss
             }
             experiment.log_metrics(metrics)    
 
@@ -155,7 +155,7 @@ def train(args, use_comet : bool = True):
             )
         print ('[INFO] Starting Testing...')    
         score = model.evaluate(dataset, args['batch_size'])
-        print(f'[INFO] Test evaluation: {score*100}...')
+        print(f'[INFO] Test evaluation: {score}...')
 
     if args['weights']:
         model.save_weights()
