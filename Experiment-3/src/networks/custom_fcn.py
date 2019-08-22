@@ -20,13 +20,6 @@ def cnn_layer(x, num_filter, kernel_size, dilation):
     x = BatchNormalization()(x)
     return x
 
-def cnn_pool_layer(x, num_filter, kernel_size, dilation):
-    x = Conv2D(num_filter, kernel_size, dilation_rate=dilation, padding='same')(x)
-    x = ReLU()(x)
-    x = BatchNormalization()(x)
-    x = MaxPooling2D()(x)
-    return x
-
 def customFCN(input_shape : Tuple[int, ...], output_shape : Tuple[int, ...]) -> Model:
     """Creates a custom fully cnn model 
     
@@ -42,11 +35,11 @@ def customFCN(input_shape : Tuple[int, ...], output_shape : Tuple[int, ...]) -> 
     input_image = Input((None, None))
     x = Lambda(lambda x: K.expand_dims(x, axis=-1))(input_image)
 
-    x = cnn_layer(x, 32, 7, 3)
+    x = cnn_layer(x, 32, 5, 3)
 
-    x = cnn_pool_layer(x, 64, 7, 3)
+    x = cnn_layer(x, 64, 5, 3)
 
-    x = cnn_pool_layer(x, 128, 7, 7)
+    x = cnn_layer(x, 128, 7, 7)
 
     output = Conv2D(num_classes, (1, 1), dilation_rate=(1, 1), padding='same', activation='softmax')(x)
     
@@ -55,14 +48,13 @@ def customFCN(input_shape : Tuple[int, ...], output_shape : Tuple[int, ...]) -> 
     return model
 
 
-
 # def dummy():
 #     num_classes = 3
-#     input_image = Input((None, None))
+#     input_image = Input((256, 256))
 #     x = Lambda(lambda x: K.expand_dims(x, axis=-1))(input_image)
 #     x = cnn_layer(x, 32, 7, 3)
-#     x = cnn_pool_layer(x, 64, 7, 3)
-#     x = cnn_pool_layer(x, 128, 7, 7)
+#     x = cnn_layer(x, 64, 7, 3)
+#     x = cnn_layer(x, 128, 7, 7)
 #     output = Conv2D(num_classes, (1, 1), dilation_rate=(1, 1), padding='same', activation='softmax')(x)
 #     model = Model(inputs=input_image, outputs=output)
 #     model.summary()

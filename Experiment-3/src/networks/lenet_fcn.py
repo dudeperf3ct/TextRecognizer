@@ -17,11 +17,6 @@ def cnn_layer(x, num_filter, kernel_size, dilation):
     x = Conv2D(num_filter, kernel_size, dilation_rate=dilation, activation='relu', padding='same')(x)
     return x
 
-def cnn_pool_layer(x, num_filter, kernel_size, dilation):
-    x = Conv2D(num_filter, kernel_size, dilation_rate=dilation, activation='relu', padding='same')(x)
-    x = MaxPooling2D()(x)
-    return x
-
 def lenetFCN(input_shape : Tuple[int, ...], output_shape : Tuple[int, ...]) -> Model:
     """Creates a lenet fcn model 
     
@@ -39,9 +34,9 @@ def lenetFCN(input_shape : Tuple[int, ...], output_shape : Tuple[int, ...]) -> M
 
     x = cnn_layer(x, 32, 7, 3)
 
-    x = cnn_pool_layer(x, 64, 7, 3)
+    x = cnn_layer(x, 64, 7, 3)
 
-    x = cnn_pool_layer(x, 128, 7, 7)
+    x = cnn_layer(x, 128, 7, 7)
 
     output = Conv2D(num_classes, (1, 1), dilation_rate=(1, 1), padding='same', activation='softmax')(x)
     
@@ -52,11 +47,11 @@ def lenetFCN(input_shape : Tuple[int, ...], output_shape : Tuple[int, ...]) -> M
 
 # def dummy():
 #     num_classes = 3
-#     input_image = Input((None, None))
+#     input_image = Input((256, 256))
 #     x = Lambda(lambda x: K.expand_dims(x, axis=-1))(input_image)
 #     x = cnn_layer(x, 32, 7, 3)
-#     x = cnn_pool_layer(x, 64, 7, 3)
-#     x = cnn_pool_layer(x, 128, 7, 7)
+#     x = cnn_layer(x, 64, 7, 3)
+#     x = cnn_layer(x, 128, 7, 7)
 #     output = Conv2D(num_classes, (1, 1), dilation_rate=(1, 1), padding='same', activation='softmax')(x)
 #     model = Model(inputs=input_image, outputs=output)
 #     model.summary()

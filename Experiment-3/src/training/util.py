@@ -84,6 +84,6 @@ def train_model(
         save_model(model.network, name)
         
         plot_loss(_history, name)
-        plot_acc(_history, name)
+        #plot_acc(_history, name)
 
         return model
