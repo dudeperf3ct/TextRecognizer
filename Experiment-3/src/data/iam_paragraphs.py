@@ -61,7 +61,7 @@ class IAMPara(Dataset):
 
         self.x, self.y, self.ids = self.load_iam_paragraphs()
         self.train_ind, self.test_ind = get_random_split(self.x.shape[0])
-        ids_train, ids_test = self.ids[self.train_ind], self.ids[self.test_ind]
+        ids_train, ids_test = self.train_ind, self.test_ind
         self.x_train, self.y_train = self.x[ids_train], self.y[ids_train]
         self.x_test, self.y_test = self.x[ids_test], self.y[ids_test]
 

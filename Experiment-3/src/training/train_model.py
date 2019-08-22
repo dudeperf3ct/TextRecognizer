@@ -15,7 +15,7 @@ from sklearn.model_selection import train_test_split
 from src.training.util import train_model
 from src.data.iam_paragraphs import IAMPara
 from src.models.line_detect_model import LineDetectModel
-from src.networks.lenet_fnn import lenetFCN
+from src.networks.lenet_fcn import lenetFCN
 from src.networks.fcn import FCN
 from src.networks.custom_fcn import customFCN
 
@@ -65,8 +65,7 @@ def train(args, use_comet : bool = True):
     data = data_cls()
     data.load_data()
     (x_train, y_train), (x_test, y_test) = (data.x_train, data.y_train), (data.x_test, data.y_test)
-    classes = data.mapping
-    
+
     # #Used for testing only
     # x_train = x_train[:100, :, :]
     # y_train = y_train[:100, :]

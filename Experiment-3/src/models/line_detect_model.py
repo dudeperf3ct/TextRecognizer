@@ -9,9 +9,9 @@ from __future__ import print_function
 from typing import Callable, Dict, Tuple
 import numpy as np
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from src.data.iam_paragraphs import IamPara
+from src.data.iam_paragraphs import IAMPara
 from src.models.base_model import Model
-from src.networks import lenet_fcn
+from src.networks.lenet_fcn import lenetFCN
 
 DATA_AUGMENTATION_PARAMS = {
     'width_shift_range': 0.06,
@@ -27,13 +27,12 @@ DATA_AUGMENTATION_PARAMS = {
 class LineDetectModel(Model):
     """Model to detect lines of text in an image."""
     def __init__(self,
-                 dataset_cls: type = IamPara,
-                 network_fn: Callable = lenet_fcn,
-                 network_args: Dict = None):
+                 network_fn: Callable = lenetFCN,
+                 dataset: type = IAMPara):
+
         """Define the default dataset and network values for this model."""
-
-        super().__init__(dataset_cls, network_fn, network_args)
-
+        super().__init__(network_fn, dataset)
+        print ('[INFO] Arguments passed to data augmentation...', DATA_AUGMENTATION_PARAMS)
         self.data_augmentor = ImageDataGenerator(**DATA_AUGMENTATION_PARAMS)
         self.batch_augment_fn = self.augment_batch
 
