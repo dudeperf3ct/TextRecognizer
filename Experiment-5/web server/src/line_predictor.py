@@ -15,7 +15,8 @@ import matplotlib.pyplot as plt
 class LinePredictor:
     """Given an image of a line of handwritten text, recognizes text contents."""
     def __init__(self, dataset=IAMLines):
-        self.model = LineModelCTC(dataset=dataset)
+        args = {'backbone' : 'lenet', 'seq_model' : 'lstm', 'bi' : True}
+        self.model = LineModelCTC(dataset=IAMLines, network_args=args)
         self.model.load_weights()
 
     def predict(self, image_or_filename: Union[np.ndarray, str]) -> Tuple[str, float]:

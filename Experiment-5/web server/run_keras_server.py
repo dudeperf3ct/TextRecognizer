@@ -1,6 +1,7 @@
+import flask
 from flask import Flask, request, jsonify
 from tensorflow.keras import backend
-import imageio
+from PIL import Image
 import numpy as np
 import io
 from pathlib import Path
@@ -17,7 +18,9 @@ predictor = None
 
 def load_model():
     # load the pre-trained Keras model
-    predictor = LinePredictor()
+    # Tensorflow bug: https://github.com/keras-team/keras/issues/2397
+    with backend.get_session().graph.as_default() as _:
+        predictor = LinePredictor()  # pylint: disable=invalid-name
 
 
 @app.route("/predict", methods=["POST"])
@@ -35,10 +38,13 @@ def predict():
 
             # classify the input image and then initialize the list
             # of predictions to return to the client
-            pred, conf = predictor.predict(image)
-            print("METRIC confidence {}".format(conf))
-            print("METRIC mean_intensity {}".format(image.mean()))
-            print("INFO pred {}".format(pred))
+            # Tensorflow bug: https://github.com/keras-team/keras/issues/2397
+            with backend.get_session().graph.as_default() as _:
+                pred, conf = predictor.predict(image)
+                print("METRIC confidence {}".format(conf))
+                print("METRIC mean_intensity {}".format(image.mean()))
+                print("INFO pred {}".format(pred))
+            
             data["predictions"] = []
 
             # loop over the results and add them to the list of
