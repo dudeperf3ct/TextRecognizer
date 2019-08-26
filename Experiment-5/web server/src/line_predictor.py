@@ -2,6 +2,9 @@
 from typing import Tuple, Union
 
 import numpy as np
+from pathlib import Path
+import sys
+sys.path.append(str(Path(__file__).resolve().parents[2]))
 from src.models.line_model_ctc import LineModelCTC
 from src.data.iam_lines import IAMLines
 import imageio
@@ -11,8 +14,8 @@ import matplotlib.pyplot as plt
 
 class LinePredictor:
     """Given an image of a line of handwritten text, recognizes text contents."""
-    def __init__(self, dataset_cls=IAMLines):
-        self.model = LineModelCTC(dataset_cls=dataset_cls)
+    def __init__(self, dataset=IAMLines):
+        self.model = LineModelCTC(dataset=dataset)
         self.model.load_weights()
 
     def predict(self, image_or_filename: Union[np.ndarray, str]) -> Tuple[str, float]:
