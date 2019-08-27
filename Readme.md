@@ -1,6 +1,6 @@
 # TextRecognizer
 
-#### Experiment-1
+## Experiment-1
 
 The goal of this experiment will be simple which is to solve a simplified version of line text recognition problem, a character recognizer.
 
@@ -86,7 +86,7 @@ Breakdown of classification for test dataset using above 3 architectures.
 - Look for new ways to increase accuracy
 
 
-#### Experiment-2
+## Experiment-2
 
 Next, we will build a Line Text Recognizer. Given a image of line of words, the task will be to output what characters are present in the line.
 
@@ -196,7 +196,7 @@ And the results.
 - Using beam search decoding for CTC Models
 
 
-#### Experiment-3
+## Experiment-3
 
 Almost done! We have completed Line Text predictor. Now comes the part of implementing Line Detector. For this, we will use IAM dataset again but paragraph dataset. Here is a sample image from paragraph dataset.
 
@@ -267,7 +267,7 @@ Results are bit embarassing.
 
 
 
-#### Experiment-4
+## Experiment-4
 
 Finally, all pieces from above experiments come together. To recap, we have a Line Predictor Model from experiment-2 which takes in input images of lines and predicts the characters in the line. And we have a Line Detector Model from experiment-3 which segments paragraphs into line regions.
 
@@ -283,6 +283,6 @@ Do you see the whole picture coming together? No?
 4. Sure enough if both the models are well trained, we will get excellent results!
 
 
-#### Experiment-5
+## Experiment-5
 
 Now that we have full end-to-end model, we can run the same model on a web server or create an android app.

@@ -38,47 +38,44 @@ Project Organization
     │
     ├── models             <- Trained and serialized models, model predictions, or model summaries
     │
-    ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-    │                         the creator's initials, and a short `-` delimited description, e.g.
-    │                         `1.0-jqp-initial-data-exploration`.
+    ├── notebooks          <- Jupyter notebooks.
     |
     |
-    ├── src                <- Source code for use in this project.
-└── src
-    ├── data
-    │   ├── dataset.py
-    │   ├── emnist_dataset.py  <- Scripts to download or generate data
-    |
-    ├── __init__.py            <- Makes src a Python module
-    |
-    ├── models
-    │   ├── base_model.py
-    │   ├── character_model.py
-    |
-    ├── networks
-    │   ├── custom.py
-    │   ├── lenet.py
-    │   └── resnet.py
-    |
-    ├── tests                    <- Scripts to use trained models to make predictions
-    │   ├── support
-    │   │   ├── create_emnist_support_files.py
-    │   │   └── emnist
-    │   │       ├── 3.png
-    │   │       ├── 8.png
-    │   │       ├── a.png
-    │   │       ├── e.png
-    │   │       └── U.png
-    │   └── test_character_predictor.py  
-    ├── training                        <- Scripts to train models
-    │   ├── character_predictor.py
-    │   ├── clr_callback.py
-    │   ├── lr_find.py
-    │   ├── train_model.py                 
-    │   └── util.py
-    ├── util.py
-    └── visualization       <- Scripts to create exploratory and results oriented visualizations
-        └── visualize.py
+    └── src                 <- Source code for use in this project
+        ├── data
+        │   ├── dataset.py
+        │   ├── emnist_dataset.py  <- Scripts to download or generate data
+        |
+        ├── __init__.py            <- Makes src a Python module
+        |
+        ├── models
+        │   ├── base_model.py
+        │   ├── character_model.py
+        |
+        ├── networks
+        │   ├── custom.py
+        │   ├── lenet.py
+        │   └── resnet.py
+        |
+        ├── tests                    <- Scripts to use trained models to make predictions
+        │   ├── support
+        │   │   ├── create_emnist_support_files.py
+        │   │   └── emnist
+        │   │       ├── 3.png
+        │   │       ├── 8.png
+        │   │       ├── a.png
+        │   │       ├── e.png
+        │   │       └── U.png
+        │   └── test_character_predictor.py  
+        ├── training                        <- Scripts to train models
+        │   ├── character_predictor.py
+        │   ├── clr_callback.py
+        │   ├── lr_find.py
+        │   ├── train_model.py                 
+        │   └── util.py
+        ├── util.py
+        └── visualization       <- Scripts to create exploratory and results oriented visualizations
+            └── visualize.py
 
 --------
 
