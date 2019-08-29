@@ -38,10 +38,12 @@ Project Organization
     │
     ├── models             <- Trained and serialized models, model predictions, or model summaries
     │
-    ├── notebooks          <- Jupyter notebooks.
+    ├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
+    │                         the creator's initials, and a short `-` delimited description, e.g.
+    │                         `1.0-jqp-initial-data-exploration`.
     |
     |
-    └── src                 <- Source code for use in this project
+    ├── src                <- Source code for use in this project.
         ├── data
         │   ├── dataset.py
         │   ├── emnist_dataset.py  <- Scripts to download or generate data

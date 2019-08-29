@@ -13,6 +13,7 @@ We started with simplest model i.e. to use only CNN to predict the characters in
 
 Next, building a complex model. We created a CNN-LSTM model with CTC loss with 3 different CNN architectures like lenet, resnet and custom as backbone. The results were remarkable. We achieved an character accuracy of 95% with lenet and 96% with custom architecture.
 
+Refer the [blog](https://dudeperf3ct.github.io/project/2019/05/17/Fun-in-Deep-Learning-Project/#experiment-2) for further details.
 
 **Learnings**
 
