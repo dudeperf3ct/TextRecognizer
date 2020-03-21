@@ -66,7 +66,7 @@ class Model:
                 tmp /= 255.0
                 yield tmp, dataset['y_valid'][i*batch_size:(i+1)*batch_size]
 
-    def fit(self, dataset, batch_size : int = 32, epochs : int = 10, callbacks : list = None, lr : float):
+    def fit(self, dataset, batch_size : int = 32, epochs : int = 10, callbacks : list = None, lr : float = 1e-3):
         if callbacks is None:
             callbacks = []
         #compile the network
@@ -93,18 +93,9 @@ class Model:
                 )
         return history
 
-    # def test_generator(self, dataset, batch_size):
-    #     num_iters = int(np.ceil(dataset['x_test'].shape[0] / batch_size))
-    #     while 1:
-    #         for i in range(num_iters):
-    #             tmp = dataset['x_test'][i*batch_size:(i+1)*batch_size].astype('float32')
-    #             tmp -= np.mean(dataset['x_train'], axis=0, keepdims=True)
-    #             tmp /= 255.0
-    #             yield tmp, dataset['y_test'][i*batch_size:(i+1)*batch_size]
-
     def evaluate(self, dataset, batch_size=16):
-        #t_generator = self.test_generator(dataset, batch_size=batch_size)  # Use a small batch size to use less memory
-        loss, accuracy = self.network.evaluate(dataset['x_test'], dataset['y_test'], batch_size=batch_size)
+        loss, accuracy = self.network.evaluate(dataset['x_test'], dataset['y_test'], 
+                                                batch_size=batch_size, verbose=2)
         return loss, accuracy
 
     def loss(self):

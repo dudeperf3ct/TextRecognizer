@@ -67,10 +67,10 @@ def train(args, use_comet : bool = True):
     # print ('[INFO] Test shape: ', x_test.shape, y_test.shape)
     # #delete these lines
 
-    y_labels = [np.where(y_train[idx]==1)[0][0] for idx in range(len(y_train))]
+    y_test_labels = [np.where(y_test[idx]==1)[0][0] for idx in range(len(y_test))]
     # distribute 99% train 1% val dataset with equal class distribution 
-    (x_train, x_valid, y_train, y_valid) = train_test_split(x_train, y_train, test_size=0.1,
-                                            stratify=y_labels, random_state=42)
+    (x_test, x_valid, y_test, y_valid) = train_test_split(x_test, y_test, test_size=0.1,
+                                            stratify=y_test_labels, random_state=42)
 
     print ('[INFO] Training shape: ', x_train.shape, y_train.shape)
     print ('[INFO] Validation shape: ', x_valid.shape, y_valid.shape)
@@ -89,7 +89,7 @@ def train(args, use_comet : bool = True):
         'y_test' : y_test
     })
 
-    if use_comet and args['find_lr']==False:
+    if use_comet and args['find_lr'] == False:
         #create an experiment with your api key
         experiment = Experiment(api_key='WVBNRAfMLCBWslJAAsffxM4Gz',
                                 project_name='emnist',
@@ -119,7 +119,7 @@ def train(args, use_comet : bool = True):
         experiment.log_parameters(args)
         experiment.log_dataset_hash(x_train) #creates and logs a hash of your data 
 
-    elif use_comet and args['find_lr']==True:
+    elif use_comet and args['find_lr'] == True:
 
         _ = train_model(
                     model,

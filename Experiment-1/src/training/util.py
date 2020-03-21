@@ -10,6 +10,7 @@ from keras.callbacks import EarlyStopping
 from src.data.dataset import Dataset
 from src.models.base_model import Model
 from pathlib import Path
+import numpy as np
 import sys
 sys.path.append(str(Path(__file__).resolve().parents[2]))
 #from src.visualization.visualize import plot_history, save_model
@@ -21,8 +22,8 @@ EARLY_STOPPING = True
 CYCLIC_LR = True
 # adjust min_lr and max_lr after plotting lr_find
 MIN_LR = 1e-5
-MAX_LR = 1e-2
-STEP_SIZE = 4
+MAX_LR = 1e-3
+STEP_SIZE = 8
 MODE = "triangular"
 SAVE_LR_PLOT = '../models/plot_lr.png'
 
