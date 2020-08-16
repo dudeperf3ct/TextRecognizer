@@ -93,7 +93,7 @@ def train(args, use_comet : bool = True):
 
     if use_comet and args['find_lr'] == False:
         #create an experiment with your api key
-        experiment = Experiment(api_key='WVBNRAfMLCBWslJAAsffxM4Gz',
+        experiment = Experiment(api_key='INSERT API KEY',
                                 project_name='emnist',
                                 auto_param_logging=False)
         
