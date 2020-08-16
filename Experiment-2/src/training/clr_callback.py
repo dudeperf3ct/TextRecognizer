@@ -5,6 +5,7 @@ Shamelessly copied from https://github.com/bckenstler/CLR/blob/master/clr_callba
 #from tensorflow.keras.callbacks import *
 import keras.backend as K
 from keras.callbacks import *
+import numpy as np
 
 class CyclicLR(Callback):
     """This callback implements a cyclical learning rate policy (CLR).
