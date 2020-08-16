@@ -110,7 +110,7 @@ def train(args, use_comet : bool = True):
 
     if use_comet and args['find_lr'] == False:
         #create an experiment with your api key
-        experiment = Experiment(api_key='WVBNRAfMLCBWslJAAsffxM4Gz',
+        experiment = Experiment(api_key='API Key here',
                                 project_name='iam_lines',
                                 auto_param_logging=False)
         
